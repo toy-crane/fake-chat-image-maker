@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Send, User, Users, Image as ImageIcon, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -208,35 +209,21 @@ export function MessageForm({
             </div>
           </div>
 
-          {/* Message Type Toggle */}
-          <div className="flex items-center gap-4 p-3 bg-muted rounded-lg">
-            <Label className="text-sm font-medium">Type:</Label>
-            <div className="flex items-center gap-4">
-              <Button
-                type="button"
-                onClick={() => setMessageType("text")}
-                variant={messageType === "text" ? "default" : "ghost"}
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <span>Text</span>
-              </Button>
-              <Button
-                type="button"
-                onClick={() => setMessageType("image")}
-                variant={messageType === "image" ? "default" : "ghost"}
-                size="sm"
-                className="flex items-center gap-2"
-              >
+          {/* Message Content with Tabs */}
+          <Tabs 
+            value={messageType} 
+            onValueChange={(value) => setMessageType(value as "text" | "image")}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="text">Text Message</TabsTrigger>
+              <TabsTrigger value="image" className="flex items-center gap-2">
                 <ImageIcon className="w-4 h-4" />
-                <span>Image</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Message Input */}
-          {messageType === "text" && (
-            <div className="space-y-2">
+                Image
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="text" className="space-y-2 mt-4">
               <Label htmlFor="content">Message</Label>
               <Textarea
                 id="content"
@@ -252,12 +239,9 @@ export function MessageForm({
                   {errors.content.message}
                 </p>
               )}
-            </div>
-          )}
-
-          {/* Image Upload */}
-          {messageType === "image" && (
-            <div className="space-y-2">
+            </TabsContent>
+            
+            <TabsContent value="image" className="space-y-2 mt-4">
               <Label>Image</Label>
               <div className="space-y-3">
                 {!selectedImage ? (
@@ -307,8 +291,8 @@ export function MessageForm({
                   {errors.content.message}
                 </p>
               )}
-            </div>
-          )}
+            </TabsContent>
+          </Tabs>
 
           {/* Time Picker */}
           <div className="space-y-2">
