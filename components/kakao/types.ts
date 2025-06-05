@@ -38,6 +38,8 @@ export interface ChatHeaderProps {
 
 export interface MessageBubbleProps {
   message: TextMessage;
+  showSenderInfo?: boolean;
+  showTimestamp?: boolean;
 }
 
 export interface ImageMessageProps {
