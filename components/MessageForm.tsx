@@ -1,16 +1,23 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { messageFormSchema, MessageFormData } from '@/lib/schemas/message';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Send, User, Users } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { messageFormSchema, MessageFormData } from "@/lib/schemas/message";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Send, User, Users, Image as ImageIcon, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
@@ -18,24 +25,30 @@ interface MessageFormProps {
   otherUserName: string;
 }
 
-export function MessageForm({ onAddMessage, currentUserName, otherUserName }: MessageFormProps) {
+export function MessageForm({
+  onAddMessage,
+  currentUserName,
+  otherUserName,
+}: MessageFormProps) {
   const [isUserMessage, setIsUserMessage] = useState(true);
-  
+  const [messageType, setMessageType] = useState<"text" | "image">("text");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const getCurrentTime = () => {
     const now = new Date();
     const hour = now.getHours();
     const minute = now.getMinutes();
     return {
       hour,
-      minute
+      minute,
     };
   };
 
   const getCurrentTimeString = () => {
-    return new Date().toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
+    return new Date().toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
@@ -43,8 +56,8 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
 
   const formatTimeFromState = () => {
     const { hour, minute } = timeState;
-    const formattedHour = hour.toString().padStart(2, '0');
-    const formattedMinute = minute.toString().padStart(2, '0');
+    const formattedHour = hour.toString().padStart(2, "0");
+    const formattedMinute = minute.toString().padStart(2, "0");
     return `${formattedHour}:${formattedMinute}`;
   };
 
@@ -58,44 +71,81 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
   } = useForm<MessageFormData>({
     resolver: zodResolver(messageFormSchema),
     defaultValues: {
-      content: '',
+      content: "",
       isUserMessage: true,
       timestamp: getCurrentTimeString(),
+      type: "text",
+      imageUrl: "",
+      imageAlt: "",
     },
   });
 
   useEffect(() => {
-    setValue('isUserMessage', isUserMessage);
+    setValue("isUserMessage", isUserMessage);
   }, [isUserMessage, setValue]);
 
   useEffect(() => {
+    setValue("type", messageType);
+  }, [messageType, setValue]);
+
+  useEffect(() => {
     // Auto-focus on mount
-    setFocus('content');
-  }, [setFocus]);
+    if (messageType === "text") {
+      setFocus("content");
+    }
+  }, [setFocus, messageType]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        setSelectedImage(dataUrl);
+        setValue("imageUrl", dataUrl);
+        setValue("imageAlt", file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+    setValue("imageUrl", "");
+    setValue("imageAlt", "");
+  };
 
   const onSubmit = (data: MessageFormData) => {
     const formData = {
       ...data,
       timestamp: formatTimeFromState(),
+      type: messageType,
     };
-    
+
     onAddMessage(formData);
-    reset({ 
-      content: '', 
-      isUserMessage 
+    reset({
+      content: "",
+      isUserMessage,
+      type: "text",
+      imageUrl: "",
+      imageAlt: "",
     });
+    setMessageType("text");
+    setSelectedImage(null);
     setTimeState(getCurrentTime());
-    setFocus('content');
+    if (messageType === "text") {
+      setFocus("content");
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Cmd/Ctrl + Enter to submit
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
       handleSubmit(onSubmit)();
     }
     // Tab to switch sender
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       e.preventDefault();
       setIsUserMessage(!isUserMessage);
     }
@@ -113,15 +163,25 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           {/* Sender Toggle */}
           <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
-              <Label htmlFor="sender" className="text-sm font-medium">
+              <Label
+                htmlFor="sender"
+                className="text-sm font-medium"
+              >
                 Sender:
               </Label>
               <div className="flex items-center gap-2">
-                <span className={`text-sm ${!isUserMessage ? 'font-semibold' : 'text-muted-foreground'}`}>
+                <span
+                  className={`text-sm ${
+                    !isUserMessage ? "font-semibold" : "text-muted-foreground"
+                  }`}
+                >
                   {otherUserName}
                 </span>
                 <Switch
@@ -130,7 +190,11 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
                   onCheckedChange={setIsUserMessage}
                   className="data-[state=checked]:bg-primary"
                 />
-                <span className={`text-sm ${isUserMessage ? 'font-semibold' : 'text-muted-foreground'}`}>
+                <span
+                  className={`text-sm ${
+                    isUserMessage ? "font-semibold" : "text-muted-foreground"
+                  }`}
+                >
                   {currentUserName} (You)
                 </span>
               </div>
@@ -144,56 +208,153 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
             </div>
           </div>
 
-          {/* Message Input */}
-          <div className="space-y-2">
-            <Label htmlFor="content">Message</Label>
-            <Textarea
-              id="content"
-              {...register('content')}
-              placeholder={`Type a message as ${isUserMessage ? currentUserName : otherUserName}...`}
-              className="min-h-[80px] resize-none"
-              onKeyDown={handleKeyDown}
-            />
-            {errors.content && (
-              <p className="text-sm text-destructive">{errors.content.message}</p>
-            )}
+          {/* Message Type Toggle */}
+          <div className="flex items-center gap-4 p-3 bg-muted rounded-lg">
+            <Label className="text-sm font-medium">Type:</Label>
+            <div className="flex items-center gap-4">
+              <Button
+                type="button"
+                onClick={() => setMessageType("text")}
+                variant={messageType === "text" ? "default" : "ghost"}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <span>Text</span>
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setMessageType("image")}
+                variant={messageType === "image" ? "default" : "ghost"}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <ImageIcon className="w-4 h-4" />
+                <span>Image</span>
+              </Button>
+            </div>
           </div>
+
+          {/* Message Input */}
+          {messageType === "text" && (
+            <div className="space-y-2">
+              <Label htmlFor="content">Message</Label>
+              <Textarea
+                id="content"
+                {...register("content")}
+                placeholder={`Type a message as ${
+                  isUserMessage ? currentUserName : otherUserName
+                }...`}
+                className="min-h-[80px] resize-none"
+                onKeyDown={handleKeyDown}
+              />
+              {errors.content && (
+                <p className="text-sm text-destructive">
+                  {errors.content.message}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Image Upload */}
+          {messageType === "image" && (
+            <div className="space-y-2">
+              <Label>Image</Label>
+              <div className="space-y-3">
+                {!selectedImage ? (
+                  <div className="flex items-center justify-center w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted hover:bg-muted/80">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <ImageIcon className="w-8 h-8 mb-2 text-muted-foreground" />
+                        <p className="mb-2 text-sm text-muted-foreground">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          an image
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          PNG, JPG, GIF up to 10MB
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div className="relative inline-block">
+                    <Image
+                      src={selectedImage}
+                      alt="Image preview"
+                      width={300}
+                      height={300}
+                      className="max-w-xs rounded-lg border object-cover"
+                    />
+                    <Button
+                      type="button"
+                      onClick={removeImage}
+                      variant="outline"
+                      size="sm"
+                      className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full shadow-lg"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {errors.content && (
+                <p className="text-sm text-destructive">
+                  {errors.content.message}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Time Picker */}
           <div className="space-y-2">
             <Label>Timestamp</Label>
             <div className="flex gap-2 items-center">
               {/* Hour */}
-              <Select 
-                value={timeState.hour.toString().padStart(2, '0')} 
-                onValueChange={(value) => setTimeState(prev => ({ ...prev, hour: parseInt(value) }))}
+              <Select
+                value={timeState.hour.toString().padStart(2, "0")}
+                onValueChange={(value) =>
+                  setTimeState((prev) => ({ ...prev, hour: parseInt(value) }))
+                }
               >
                 <SelectTrigger className="w-20">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                    <SelectItem key={hour} value={hour.toString().padStart(2, '0')}>
-                      {hour.toString().padStart(2, '0')}
+                    <SelectItem
+                      key={hour}
+                      value={hour.toString().padStart(2, "0")}
+                    >
+                      {hour.toString().padStart(2, "0")}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <span className="text-muted-foreground">:</span>
-              
+
               {/* Minute */}
-              <Select 
-                value={timeState.minute.toString().padStart(2, '0')} 
-                onValueChange={(value) => setTimeState(prev => ({ ...prev, minute: parseInt(value) }))}
+              <Select
+                value={timeState.minute.toString().padStart(2, "0")}
+                onValueChange={(value) =>
+                  setTimeState((prev) => ({ ...prev, minute: parseInt(value) }))
+                }
               >
                 <SelectTrigger className="w-20">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
-                    <SelectItem key={minute} value={minute.toString().padStart(2, '0')}>
-                      {minute.toString().padStart(2, '0')}
+                    <SelectItem
+                      key={minute}
+                      value={minute.toString().padStart(2, "0")}
+                    >
+                      {minute.toString().padStart(2, "0")}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -204,9 +365,16 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
           {/* Submit Button */}
           <div className="flex items-center justify-between">
             <div className="text-xs text-muted-foreground">
-              Press <kbd className="px-1.5 py-0.5 bg-muted rounded">Cmd/Ctrl + Enter</kbd> to send
+              Press{" "}
+              <kbd className="px-1.5 py-0.5 bg-muted rounded">
+                Cmd/Ctrl + Enter
+              </kbd>{" "}
+              to send
             </div>
-            <Button type="submit" className="flex items-center gap-2">
+            <Button
+              type="submit"
+              className="flex items-center gap-2"
+            >
               <Send className="w-4 h-4" />
               Add Message
             </Button>
