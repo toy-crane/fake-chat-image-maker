@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, User, Users } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -20,6 +21,33 @@ interface MessageFormProps {
 export function MessageForm({ onAddMessage, currentUserName, otherUserName }: MessageFormProps) {
   const [isUserMessage, setIsUserMessage] = useState(true);
   
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    return {
+      hour,
+      minute
+    };
+  };
+
+  const getCurrentTimeString = () => {
+    return new Date().toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
+  const [timeState, setTimeState] = useState(() => getCurrentTime());
+
+  const formatTimeFromState = () => {
+    const { hour, minute } = timeState;
+    const formattedHour = hour.toString().padStart(2, '0');
+    const formattedMinute = minute.toString().padStart(2, '0');
+    return `${formattedHour}:${formattedMinute}`;
+  };
+
   const {
     register,
     handleSubmit,
@@ -32,6 +60,7 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
     defaultValues: {
       content: '',
       isUserMessage: true,
+      timestamp: getCurrentTimeString(),
     },
   });
 
@@ -45,18 +74,17 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
   }, [setFocus]);
 
   const onSubmit = (data: MessageFormData) => {
-    // Add current timestamp if not provided
     const formData = {
       ...data,
-      timestamp: data.timestamp || new Date().toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
-      }),
+      timestamp: formatTimeFromState(),
     };
     
     onAddMessage(formData);
-    reset({ content: '', isUserMessage });
+    reset({ 
+      content: '', 
+      isUserMessage 
+    });
+    setTimeState(getCurrentTime());
     setFocus('content');
   };
 
@@ -129,6 +157,48 @@ export function MessageForm({ onAddMessage, currentUserName, otherUserName }: Me
             {errors.content && (
               <p className="text-sm text-destructive">{errors.content.message}</p>
             )}
+          </div>
+
+          {/* Time Picker */}
+          <div className="space-y-2">
+            <Label>Timestamp</Label>
+            <div className="flex gap-2 items-center">
+              {/* Hour */}
+              <Select 
+                value={timeState.hour.toString().padStart(2, '0')} 
+                onValueChange={(value) => setTimeState(prev => ({ ...prev, hour: parseInt(value) }))}
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                    <SelectItem key={hour} value={hour.toString().padStart(2, '0')}>
+                      {hour.toString().padStart(2, '0')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <span className="text-muted-foreground">:</span>
+              
+              {/* Minute */}
+              <Select 
+                value={timeState.minute.toString().padStart(2, '0')} 
+                onValueChange={(value) => setTimeState(prev => ({ ...prev, minute: parseInt(value) }))}
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
+                    <SelectItem key={minute} value={minute.toString().padStart(2, '0')}>
+                      {minute.toString().padStart(2, '0')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Submit Button */}
