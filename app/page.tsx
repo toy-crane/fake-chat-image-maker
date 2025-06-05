@@ -90,10 +90,8 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   const handleAddMessage = useCallback((data: MessageFormData) => {
-    const newMessage: Message = {
+    const baseMessage = {
       id: Date.now().toString(),
-      type: 'text',
-      content: data.content,
       sender: data.isUserMessage ? currentUser : otherUser,
       timestamp: data.timestamp || new Date().toLocaleTimeString('en-US', { 
         hour: 'numeric', 
@@ -103,6 +101,19 @@ export default function Home() {
       isUser: data.isUserMessage,
     };
 
+    const newMessage: Message = data.type === 'text' 
+      ? {
+          ...baseMessage,
+          type: 'text',
+          content: data.content || '',
+        }
+      : {
+          ...baseMessage,
+          type: 'image',
+          imageUrl: data.imageUrl!,
+          alt: data.imageAlt || 'Uploaded image',
+        };
+
     setMessages(prev => [...prev, newMessage]);
   }, [currentUser, otherUser]);
 
@@ -110,6 +121,7 @@ export default function Home() {
     handleAddMessage({
       content: message,
       isUserMessage: true,
+      type: 'text',
     });
   };
 
