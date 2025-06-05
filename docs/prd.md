@@ -86,6 +86,7 @@ This product is a web-based fake chat message generator that helps meme creators
 - Frontend: Next.js with App Router for the single-page application
 - Styling: Tailwind CSS with shadcn/ui components
 - State Management: React Context for chat data
+- Form Management: react-hook-form with zod schema validation
 - Image Processing: Canvas API for generating exports
 - File Handling: Browser File API for imports/uploads
 
@@ -95,6 +96,13 @@ This product is a web-based fake chat message generator that helps meme creators
 - Chat state: `{participants, messages, settings}`
 - Participant object: `{id, name, avatar, isUser}`
 - KakaoTalk settings: `{theme, features, dimensions, chatRoomName}`
+
+**Form Validation**
+
+- Message forms: Validate text content (required, max length), sender selection (required)
+- Participant forms: Validate name (required, 1-20 characters), avatar URL/file format
+- JSON import: Schema validation for bulk import structure and data types
+- All forms use react-hook-form with zod schemas for runtime type safety
 
 **APIs and Integrations**
 
@@ -115,8 +123,9 @@ This product is a web-based fake chat message generator that helps meme creators
 **MVP Requirements**
 
 - Single page with KakaoTalk chat template
+- Two-person chat only (sender and receiver)
 - Basic message creation (add, edit, delete)
-- Profile customization (name and avatar upload)
+- Profile customization (name and avatar upload for both participants)
 - Real-time preview with authentic KakaoTalk styling
 - Image export functionality
 - localStorage auto-save
@@ -234,3 +243,5 @@ This product is a web-based fake chat message generator that helps meme creators
 - Supported image formats: JPEG, PNG, WebP
 - Maximum localStorage per project: 5MB
 - Browser support: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- Form validation: Zod schemas for type-safe validation
+- Form state management: react-hook-form for performant form handling
