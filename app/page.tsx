@@ -1,103 +1,108 @@
-import Image from "next/image";
+'use client';
+
+import { KakaoTalkChat, Message, User } from '../components/kakao';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // Sample data
+  const currentUser: User = {
+    id: 'current-user',
+    name: '나'
+  };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const otherUser: User = {
+    id: 'yuna',
+    name: '유나',
+    avatar: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23f0f0f0'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='%23999' font-size='14'%3E유나%3C/text%3E%3C/svg%3E"
+  };
+
+  const messages: Message[] = [
+    {
+      id: '1',
+      type: 'image',
+      imageUrl: '/sample-attachment.png',
+      alt: 'AI Supper Hero attachment',
+      sender: otherUser,
+      timestamp: '11:30 AM',
+      isUser: false
+    },
+    {
+      id: '2',
+      type: 'image',
+      imageUrl: '/sample-attachment.png',
+      alt: 'User image attachment',
+      sender: currentUser,
+      timestamp: '11:40 AM',
+      isUser: true
+    },
+    {
+      id: '3',
+      type: 'text',
+      content: '잠실 도착이요',
+      sender: currentUser,
+      timestamp: '11:42 AM',
+      isUser: true
+    },
+    {
+      id: '4',
+      type: 'text',
+      content: '이약이 분유 다 먹었나요?',
+      sender: currentUser,
+      timestamp: '3:19 PM',
+      isUser: true
+    },
+    {
+      id: '5',
+      type: 'text',
+      content: '생님 베이글 사갈까영?',
+      sender: currentUser,
+      timestamp: '3:20 PM',
+      isUser: true
+    },
+    {
+      id: '6',
+      type: 'text',
+      content: '이제받네요 ㅎ ㅎ',
+      sender: otherUser,
+      timestamp: '4:11 PM',
+      isUser: false
+    },
+    {
+      id: '7',
+      type: 'text',
+      content: '이약이 잘고있어영',
+      sender: otherUser,
+      timestamp: '4:11 PM',
+      isUser: false
+    },
+    {
+      id: '8',
+      type: 'text',
+      content: '저도 갈이 잦으요',
+      sender: otherUser,
+      timestamp: '4:11 PM',
+      isUser: false
+    }
+  ];
+
+  const handleSendMessage = (message: string) => {
+    console.log('Sending message:', message);
+    // Here you would typically add the message to your state
+  };
+
+  const handleAttach = () => {
+    console.log('Attach clicked');
+    // Here you would typically open file picker
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <KakaoTalkChat
+        messages={messages}
+        currentUser={currentUser}
+        chatTitle="유나"
+        onSendMessage={handleSendMessage}
+        onAttach={handleAttach}
+      />
     </div>
   );
 }
