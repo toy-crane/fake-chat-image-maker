@@ -1,6 +1,9 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import { KakaoTalkChat, Message, User } from '../components/kakao';
+import { MessageForm } from '../components/MessageForm';
+import { MessageFormData } from '@/lib/schemas/message';
 
 export default function Home() {
   // Sample data
@@ -15,7 +18,7 @@ export default function Home() {
     avatar: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23f0f0f0'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='%23999' font-size='14'%3E유나%3C/text%3E%3C/svg%3E"
   };
 
-  const messages: Message[] = [
+  const initialMessages: Message[] = [
     {
       id: '1',
       type: 'image',
@@ -84,9 +87,30 @@ export default function Home() {
     }
   ];
 
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+
+  const handleAddMessage = useCallback((data: MessageFormData) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      type: 'text',
+      content: data.content,
+      sender: data.isUserMessage ? currentUser : otherUser,
+      timestamp: data.timestamp || new Date().toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }),
+      isUser: data.isUserMessage,
+    };
+
+    setMessages(prev => [...prev, newMessage]);
+  }, [currentUser, otherUser]);
+
   const handleSendMessage = (message: string) => {
-    console.log('Sending message:', message);
-    // Here you would typically add the message to your state
+    handleAddMessage({
+      content: message,
+      isUserMessage: true,
+    });
   };
 
   const handleAttach = () => {
@@ -95,14 +119,32 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <KakaoTalkChat
-        messages={messages}
-        currentUser={currentUser}
-        chatTitle="유나"
-        onSendMessage={handleSendMessage}
-        onAttach={handleAttach}
-      />
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">Fake Chat Message Generator</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Message Form */}
+          <div className="space-y-6">
+            <MessageForm 
+              onAddMessage={handleAddMessage}
+              currentUserName={currentUser.name}
+              otherUserName={otherUser.name}
+            />
+          </div>
+          
+          {/* Chat Preview */}
+          <div className="flex justify-center">
+            <KakaoTalkChat
+              messages={messages}
+              currentUser={currentUser}
+              chatTitle={otherUser.name}
+              onSendMessage={handleSendMessage}
+              onAttach={handleAttach}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
