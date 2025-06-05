@@ -7,7 +7,8 @@ export function ImageMessage({ message }: ImageMessageProps) {
   if (isUser) {
     return (
       <div className="flex justify-end mb-4">
-        <div className="flex flex-col items-end">
+        <div className="flex items-end gap-2">
+          <span className="text-xs text-gray-500">{timestamp}</span>
           <div className="max-w-xs">
             <Image
               src={imageUrl}
@@ -17,7 +18,6 @@ export function ImageMessage({ message }: ImageMessageProps) {
               className="rounded-lg"
             />
           </div>
-          <span className="text-xs text-gray-500 mt-1">{timestamp}</span>
         </div>
       </div>
     );
@@ -40,16 +40,18 @@ export function ImageMessage({ message }: ImageMessageProps) {
       </div>
       <div className="flex flex-col">
         <span className="text-sm font-medium text-gray-700 mb-1">{sender.name}</span>
-        <div className="max-w-xs">
-          <Image
-            src={imageUrl}
-            alt={alt}
-            width={200}
-            height={200}
-            className="rounded-lg"
-          />
+        <div className="flex items-end gap-2">
+          <div className="max-w-xs">
+            <Image
+              src={imageUrl}
+              alt={alt}
+              width={200}
+              height={200}
+              className="rounded-lg"
+            />
+          </div>
+          <span className="text-xs text-gray-500">{timestamp}</span>
         </div>
-        <span className="text-xs text-gray-500 mt-1">{timestamp}</span>
       </div>
     </div>
   );
