@@ -34,7 +34,8 @@ export function KakaoTalkChat({
       // 2. In same minute
       if (
         prevMessage.sender.id === message.sender.id &&
-        prevMessage.timestamp.substring(0, 5) === message.timestamp.substring(0, 5)
+        prevMessage.timestamp.getHours() === message.timestamp.getHours() &&
+        prevMessage.timestamp.getMinutes() === message.timestamp.getMinutes()
       ) {
         showSenderInfo = false;
       }
@@ -48,7 +49,8 @@ export function KakaoTalkChat({
       // 2. In same minute
       if (
         nextMessage.sender.id === message.sender.id &&
-        nextMessage.timestamp.substring(0, 5) === message.timestamp.substring(0, 5)
+        nextMessage.timestamp.getHours() === message.timestamp.getHours() &&
+        nextMessage.timestamp.getMinutes() === message.timestamp.getMinutes()
       ) {
         showTimestamp = false;
       }

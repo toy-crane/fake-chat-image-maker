@@ -1,13 +1,18 @@
 import { MessageBubbleProps } from "./types";
+import { format } from "date-fns";
 
 export function MessageBubble({ message, showSenderInfo = true, showTimestamp = true }: MessageBubbleProps) {
   const { content, sender, timestamp, isUser } = message;
+  
+  const formatTime = (date: Date) => {
+    return format(date, "h:mm a");
+  };
 
   if (isUser) {
     return (
       <div className="flex justify-end mb-2">
         <div className="flex items-end gap-2">
-          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{timestamp}</span>}
+          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{formatTime(timestamp)}</span>}
           <div className="bg-yellow-300 rounded-2xl rounded-tr-md px-3 py-2 max-w-xs">
             <span className="text-black">{content}</span>
           </div>
@@ -45,7 +50,7 @@ export function MessageBubble({ message, showSenderInfo = true, showTimestamp = 
           <div className="bg-white rounded-2xl rounded-tl-md px-3 py-2 max-w-xs shadow-sm">
             <span className="text-black">{content}</span>
           </div>
-          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{timestamp}</span>}
+          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{formatTime(timestamp)}</span>}
         </div>
       </div>
     </div>

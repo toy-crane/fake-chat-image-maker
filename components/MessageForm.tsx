@@ -45,22 +45,7 @@ export function MessageForm({
     };
   };
 
-  const getCurrentTimeString = () => {
-    return new Date().toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
   const [timeState, setTimeState] = useState(() => getCurrentTime());
-
-  const formatTimeFromState = () => {
-    const { hour, minute } = timeState;
-    const formattedHour = hour.toString().padStart(2, "0");
-    const formattedMinute = minute.toString().padStart(2, "0");
-    return `${formattedHour}:${formattedMinute}`;
-  };
 
   const {
     register,
@@ -74,7 +59,8 @@ export function MessageForm({
     defaultValues: {
       content: "",
       isUserMessage: true,
-      timestamp: getCurrentTimeString(),
+      hour: timeState.hour,
+      minute: timeState.minute,
       type: "text",
       imageUrl: "",
       imageAlt: "",
@@ -88,6 +74,11 @@ export function MessageForm({
   useEffect(() => {
     setValue("type", messageType);
   }, [messageType, setValue]);
+
+  useEffect(() => {
+    setValue("hour", timeState.hour);
+    setValue("minute", timeState.minute);
+  }, [timeState, setValue]);
 
   useEffect(() => {
     // Auto-focus on mount
@@ -119,7 +110,8 @@ export function MessageForm({
   const onSubmit = (data: MessageFormData) => {
     const formData = {
       ...data,
-      timestamp: formatTimeFromState(),
+      hour: timeState.hour,
+      minute: timeState.minute,
       type: messageType,
     };
 
@@ -127,6 +119,8 @@ export function MessageForm({
     reset({
       content: "",
       isUserMessage,
+      hour: timeState.hour,
+      minute: timeState.minute,
       type: "text",
       imageUrl: "",
       imageAlt: "",

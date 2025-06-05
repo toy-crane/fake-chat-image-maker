@@ -1,14 +1,19 @@
 import Image from 'next/image';
 import { ImageMessageProps } from './types';
+import { format } from 'date-fns';
 
 export function ImageMessage({ message }: ImageMessageProps) {
   const { imageUrl, alt, sender, timestamp, isUser } = message;
+  
+  const formatTime = (date: Date) => {
+    return format(date, "h:mm a");
+  };
 
   if (isUser) {
     return (
       <div className="flex justify-end mb-4">
         <div className="flex items-end gap-2">
-          <span className="text-xs text-gray-500">{timestamp}</span>
+          <span className="text-xs text-gray-500">{formatTime(timestamp)}</span>
           <div className="max-w-xs">
             <Image
               src={imageUrl}
@@ -50,7 +55,7 @@ export function ImageMessage({ message }: ImageMessageProps) {
               className="rounded-lg"
             />
           </div>
-          <span className="text-xs text-gray-500">{timestamp}</span>
+          <span className="text-xs text-gray-500">{formatTime(timestamp)}</span>
         </div>
       </div>
     </div>

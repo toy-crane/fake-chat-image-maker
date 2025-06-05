@@ -25,7 +25,7 @@ export default function Home() {
       imageUrl: '/sample-attachment.png',
       alt: 'AI Supper Hero attachment',
       sender: otherUser,
-      timestamp: '11:30 AM',
+      timestamp: new Date(new Date().setHours(11, 30)),
       isUser: false
     },
     {
@@ -34,7 +34,7 @@ export default function Home() {
       imageUrl: '/sample-attachment.png',
       alt: 'User image attachment',
       sender: currentUser,
-      timestamp: '11:40 AM',
+      timestamp: new Date(new Date().setHours(11, 40)),
       isUser: true
     },
     {
@@ -42,7 +42,7 @@ export default function Home() {
       type: 'text',
       content: '잠실 도착이요',
       sender: currentUser,
-      timestamp: '11:42 AM',
+      timestamp: new Date(new Date().setHours(11, 42)),
       isUser: true
     },
     {
@@ -50,7 +50,7 @@ export default function Home() {
       type: 'text',
       content: '이약이 분유 다 먹었나요?',
       sender: currentUser,
-      timestamp: '3:19 PM',
+      timestamp: new Date(new Date().setHours(15, 19)),
       isUser: true
     },
     {
@@ -58,7 +58,7 @@ export default function Home() {
       type: 'text',
       content: '생님 베이글 사갈까영?',
       sender: currentUser,
-      timestamp: '3:20 PM',
+      timestamp: new Date(new Date().setHours(15, 20)),
       isUser: true
     },
     {
@@ -66,7 +66,7 @@ export default function Home() {
       type: 'text',
       content: '이제받네요 ㅎ ㅎ',
       sender: otherUser,
-      timestamp: '4:11 PM',
+      timestamp: new Date(new Date().setHours(16, 11)),
       isUser: false
     },
     {
@@ -74,7 +74,7 @@ export default function Home() {
       type: 'text',
       content: '이약이 잘고있어영',
       sender: otherUser,
-      timestamp: '4:11 PM',
+      timestamp: new Date(new Date().setHours(16, 11)),
       isUser: false
     },
     {
@@ -82,7 +82,7 @@ export default function Home() {
       type: 'text',
       content: '저도 갈이 잦으요',
       sender: otherUser,
-      timestamp: '4:11 PM',
+      timestamp: new Date(new Date().setHours(16, 11)),
       isUser: false
     }
   ];
@@ -90,14 +90,14 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   const handleAddMessage = useCallback((data: MessageFormData) => {
+    // Create Date from hour and minute
+    const timestampDate = new Date();
+    timestampDate.setHours(data.hour, data.minute, 0, 0);
+
     const baseMessage = {
       id: Date.now().toString(),
       sender: data.isUserMessage ? currentUser : otherUser,
-      timestamp: data.timestamp || new Date().toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
-      }),
+      timestamp: timestampDate,
       isUser: data.isUserMessage,
     };
 
@@ -118,10 +118,13 @@ export default function Home() {
   }, [currentUser, otherUser]);
 
   const handleSendMessage = (message: string) => {
+    const now = new Date();
     handleAddMessage({
       content: message,
       isUserMessage: true,
       type: 'text',
+      hour: now.getHours(),
+      minute: now.getMinutes(),
     });
   };
 

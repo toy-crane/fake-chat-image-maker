@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const messageFormSchema = z.object({
   content: z.string().optional(),
   isUserMessage: z.boolean(),
-  timestamp: z.string().optional(),
+  hour: z.number().min(0).max(23),
+  minute: z.number().min(0).max(59),
   type: z.enum(['text', 'image']),
   imageUrl: z.string().optional(),
   imageAlt: z.string().optional(),

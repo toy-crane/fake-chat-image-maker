@@ -9,7 +9,7 @@ export interface TextMessage {
   type: 'text';
   content: string;
   sender: User;
-  timestamp: string;
+  timestamp: Date;
   isUser: boolean;
 }
 
@@ -19,7 +19,7 @@ export interface ImageMessage {
   imageUrl: string;
   alt: string;
   sender: User;
-  timestamp: string;
+  timestamp: Date;
   isUser: boolean;
 }
 
