@@ -37,7 +37,7 @@ export function MessageBubble({
       {showSenderInfo ? (
         <Avatar className="w-10 h-10 flex-shrink-0">
           <AvatarImage
-            src={sender.avatar}
+            src={sender.avatar || undefined}
             alt={sender.name}
           />
           <AvatarFallback className="text-sm">{sender.name}</AvatarFallback>

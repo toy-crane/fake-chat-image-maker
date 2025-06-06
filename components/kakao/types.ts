@@ -1,12 +1,12 @@
 export interface User {
   id: string;
-  name: string;
+  name?: string;
   avatar?: string;
 }
 
 export interface TextMessage {
   id: string;
-  type: 'text';
+  type: "text";
   content: string;
   sender: User;
   timestamp: Date;
@@ -15,7 +15,7 @@ export interface TextMessage {
 
 export interface ImageMessage {
   id: string;
-  type: 'image';
+  type: "image";
   imageUrl: string;
   alt: string;
   sender: User;

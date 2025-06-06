@@ -1,27 +1,11 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { User } from "@/components/kakao/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Upload, Users, X } from "lucide-react";
-
-const profileFormSchema = z.object({
-  currentUser: z.object({
-    name: z.string().min(1, "Name required"),
-    avatar: z.string().optional(),
-  }),
-  otherUser: z.object({
-    name: z.string().min(1, "Name required"),
-    avatar: z.string().optional(),
-  }),
-});
-
-type ProfileFormData = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
   currentUser?: User;
@@ -34,26 +18,19 @@ export function ProfileForm({
   otherUser,
   onUpdateUsers,
 }: ProfileFormProps) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isValid },
-  } = useForm<ProfileFormData>({
-    resolver: zodResolver(profileFormSchema),
-    mode: "onChange",
-    defaultValues: {
-      currentUser: {
-        name: currentUser?.name || "",
-        avatar: currentUser?.avatar || "",
-      },
-      otherUser: {
-        name: otherUser?.name || "",
-        avatar: otherUser?.avatar || "",
-      },
-    },
-  });
+  const updateCurrentUser = (updates: Partial<User>) => {
+    onUpdateUsers(
+      { ...currentUser, ...updates, id: "me" },
+      { ...otherUser, id: "other" }
+    );
+  };
+
+  const updateOtherUser = (updates: Partial<User>) => {
+    onUpdateUsers(
+      { ...currentUser, id: "me" },
+      { ...otherUser, ...updates, id: "other" }
+    );
+  };
 
   const handleImageUpload = (
     file: File,
@@ -63,17 +40,14 @@ export function ProfileForm({
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setValue(`${userType}.avatar`, result, { shouldDirty: true });
+        if (userType === "currentUser") {
+          updateCurrentUser({ avatar: result });
+        } else {
+          updateOtherUser({ avatar: result });
+        }
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const onSubmit = (data: ProfileFormData) => {
-    onUpdateUsers(
-      { ...data.currentUser, id: "me" },
-      { ...data.otherUser, id: "other" }
-    );
   };
 
   return (
@@ -85,45 +59,36 @@ export function ProfileForm({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <div className="space-y-6">
           {/* Current User */}
           <div className="space-y-4">
             <h3 className="font-medium">You</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={watch("currentUser.avatar") || undefined} />
+                  <AvatarImage src={currentUser?.avatar || undefined} />
                   <AvatarFallback className="text-sm">
-                    {watch("currentUser.name") || "You"}
+                    {currentUser?.name || "You"}
                   </AvatarFallback>
                 </Avatar>
-                {watch("currentUser.avatar") && (
+                {currentUser?.avatar && (
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
                     className="absolute -top-1 -right-1 h-5 w-5 rounded-full"
-                    onClick={() =>
-                      setValue("currentUser.avatar", "", { shouldDirty: true })
-                    }
+                    onClick={() => updateCurrentUser({ avatar: "" })}
                   >
                     <X className="h-3 w-3" />
                   </Button>
                 )}
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="flex-1">
                 <Input
                   placeholder="Your name"
-                  {...register("currentUser.name")}
+                  value={currentUser?.name || ""}
+                  onChange={(e) => updateCurrentUser({ name: e.target.value })}
                 />
-                {errors.currentUser?.name && (
-                  <p className="text-sm text-destructive">
-                    {errors.currentUser.name.message}
-                  </p>
-                )}
               </div>
               <Button
                 type="button"
@@ -143,11 +108,6 @@ export function ProfileForm({
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
-            {errors.currentUser?.avatar && (
-              <p className="text-sm text-destructive">
-                {errors.currentUser.avatar.message}
-              </p>
-            )}
           </div>
 
           {/* Other User */}
@@ -156,35 +116,29 @@ export function ProfileForm({
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={watch("otherUser.avatar") || undefined} />
+                  <AvatarImage src={otherUser?.avatar || undefined} />
                   <AvatarFallback className="text-sm">
-                    {watch("otherUser.name") || "Other"}
+                    {otherUser?.name || "Other"}
                   </AvatarFallback>
                 </Avatar>
-                {watch("otherUser.avatar") && (
+                {otherUser?.avatar && (
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
                     className="absolute -top-1 -right-1 h-5 w-5 rounded-full"
-                    onClick={() =>
-                      setValue("otherUser.avatar", "", { shouldDirty: true })
-                    }
+                    onClick={() => updateOtherUser({ avatar: "" })}
                   >
                     <X className="h-3 w-3" />
                   </Button>
                 )}
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="flex-1">
                 <Input
                   placeholder="Partner name"
-                  {...register("otherUser.name")}
+                  value={otherUser?.name || ""}
+                  onChange={(e) => updateOtherUser({ name: e.target.value })}
                 />
-                {errors.otherUser?.name && (
-                  <p className="text-sm text-destructive">
-                    {errors.otherUser.name.message}
-                  </p>
-                )}
               </div>
               <Button
                 type="button"
@@ -204,21 +158,8 @@ export function ProfileForm({
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
-            {errors.otherUser?.avatar && (
-              <p className="text-sm text-destructive">
-                {errors.otherUser.avatar.message}
-              </p>
-            )}
           </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!isValid}
-          >
-            Save
-          </Button>
-        </form>
+        </div>
       </CardContent>
     </Card>
   );
