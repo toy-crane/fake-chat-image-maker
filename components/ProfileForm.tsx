@@ -94,9 +94,9 @@ export function ProfileForm({
             <h3 className="font-medium">You</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-12 w-12">
+                <Avatar className="h-10 w-10">
                   <AvatarImage src={watch("currentUser.avatar") || undefined} />
-                  <AvatarFallback>
+                  <AvatarFallback className="text-sm">
                     {watch("currentUser.name") || "You"}
                   </AvatarFallback>
                 </Avatar>
@@ -155,9 +155,9 @@ export function ProfileForm({
             <h3 className="font-medium">Chat Partner</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-12 w-12">
+                <Avatar className="h-10 w-10">
                   <AvatarImage src={watch("otherUser.avatar") || undefined} />
-                  <AvatarFallback>
+                  <AvatarFallback className="text-sm">
                     {watch("otherUser.name") || "Other"}
                   </AvatarFallback>
                 </Avatar>

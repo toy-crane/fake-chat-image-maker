@@ -40,9 +40,7 @@ export function MessageBubble({
             src={sender.avatar}
             alt={sender.name}
           />
-          <AvatarFallback className="bg-gray-200 text-gray-500 text-xs">
-            {sender.name}
-          </AvatarFallback>
+          <AvatarFallback className="text-sm">{sender.name}</AvatarFallback>
         </Avatar>
       ) : (
         <div className="w-10 h-10 flex-shrink-0" />
