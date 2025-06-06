@@ -70,7 +70,6 @@ export function ProfileForm({
   };
 
   const onSubmit = (data: ProfileFormData) => {
-    console.log("data", data);
     onUpdateUsers(
       { ...data.currentUser, id: "me" },
       { ...data.otherUser, id: "other" }
