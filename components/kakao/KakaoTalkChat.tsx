@@ -22,7 +22,7 @@ export function KakaoTalkChat({
   const renderMessage = (message: Message, index: number) => {
     let showSenderInfo = true;
     let showTimestamp = true;
-    
+
     // Check with previous message for sender info (avatar/name)
     if (index > 0) {
       const prevMessage = messages[index - 1];
@@ -37,7 +37,7 @@ export function KakaoTalkChat({
         showSenderInfo = false;
       }
     }
-    
+
     // Check with next message for timestamp
     if (index < messages.length - 1) {
       const nextMessage = messages[index + 1];
@@ -75,15 +75,13 @@ export function KakaoTalkChat({
 
   return (
     <div
-      className={`w-full max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
+      className={`w-full min-w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
     >
       {/* Status Bar */}
       <StatusBar time="4:24" />
 
       {/* Chat Header */}
-      <ChatHeader
-        title={chatTitle}
-      />
+      <ChatHeader title={chatTitle} />
 
       {/* Messages Area */}
       <div className="flex-1 bg-blue-100 p-4 overflow-y-auto">
