@@ -1,10 +1,14 @@
 "use client";
 
+import { useRef } from "react";
+import html2canvas from "html2canvas-pro";
+import { Download } from "lucide-react";
 import { KakaoTalkChat } from "../components/kakao";
 import { MessageForm } from "../components/MessageForm";
 import { ProfileForm } from "../components/ProfileForm";
 import { ChatProvider, useChatContext } from "@/lib/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function ChatInterface() {
@@ -16,6 +20,28 @@ function ChatInterface() {
     updateUsers,
     clearMessages,
   } = useChatContext();
+
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  const downloadChatImage = async () => {
+    if (!chatRef.current) return;
+
+    try {
+      const canvas = await html2canvas(chatRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      const link = document.createElement('a');
+      link.download = `chat-${new Date().toISOString().slice(0, 10)}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    } catch (error) {
+      console.error('Error downloading chat image:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -35,7 +61,18 @@ function ChatInterface() {
           <div className="xl:col-span-3">
             <Card>
               <CardHeader>
-                <CardTitle className="text-2xl">Chat Setup</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl">Chat Setup</CardTitle>
+                  <Button
+                    onClick={downloadChatImage}
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download Chat
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="profiles">
@@ -74,7 +111,7 @@ function ChatInterface() {
 
           {/* Chat Preview */}
           <div className="xl:col-span-2 flex justify-center xl:justify-start">
-            <div className="sticky top-8">
+            <div className="sticky top-8" ref={chatRef}>
               <KakaoTalkChat
                 messages={messages}
                 chatTitle={otherUser?.name || ""}
