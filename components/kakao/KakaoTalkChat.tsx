@@ -3,6 +3,7 @@ import { StatusBar } from "./StatusBar";
 import { ChatHeader } from "./ChatHeader";
 import { MessageBubble } from "./MessageBubble";
 import { ImageMessage } from "./ImageMessage";
+import { ChatInput } from "./ChatInput";
 import { KakaoTalkChatProps, Message } from "./types";
 
 export function KakaoTalkChat({
@@ -88,6 +89,9 @@ export function KakaoTalkChat({
         {messages.map((message, index) => renderMessage(message, index))}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Input Area */}
+      <ChatInput />
 
       {/* Home Indicator */}
       <div className="bg-white pb-2 flex justify-center">
