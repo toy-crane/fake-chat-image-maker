@@ -11,18 +11,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Upload, Users } from "lucide-react";
 
 const profileFormSchema = z.object({
-  currentUser: z
-    .object({
-      name: z.string().min(1, "Name required"),
-      avatar: z.string().optional(),
-    })
-    .required(),
-  otherUser: z
-    .object({
-      name: z.string().min(1, "Name required"),
-      avatar: z.string().optional(),
-    })
-    .required(),
+  currentUser: z.object({
+    name: z.string().min(1, "Name required"),
+    avatar: z.string().optional(),
+  }),
+  otherUser: z.object({
+    name: z.string().min(1, "Name required"),
+    avatar: z.string().optional(),
+  }),
 });
 
 type ProfileFormData = z.infer<typeof profileFormSchema>;
@@ -49,10 +45,12 @@ export function ProfileForm({
     mode: "onChange",
     defaultValues: {
       currentUser: {
-        name: currentUser?.name,
+        name: currentUser?.name || "",
+        avatar: currentUser?.avatar || "",
       },
       otherUser: {
-        name: otherUser?.name,
+        name: otherUser?.name || "",
+        avatar: otherUser?.avatar || "",
       },
     },
   });
@@ -74,8 +72,8 @@ export function ProfileForm({
   const onSubmit = (data: ProfileFormData) => {
     console.log("data", data);
     onUpdateUsers(
-      { ...currentUser!, ...data.currentUser },
-      { ...otherUser!, ...data.otherUser }
+      { ...data.currentUser, id: "me" },
+      { ...data.otherUser, id: "other" }
     );
   };
 
@@ -182,8 +180,8 @@ export function ProfileForm({
 
           <Button
             type="submit"
-            disabled={!isValid}
             className="w-full"
+            disabled={!isValid}
           >
             Save
           </Button>
