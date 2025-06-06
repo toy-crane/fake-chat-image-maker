@@ -1,9 +1,14 @@
 import { MessageBubbleProps } from "./types";
 import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function MessageBubble({ message, showSenderInfo = true, showTimestamp = true }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  showSenderInfo = true,
+  showTimestamp = true,
+}: MessageBubbleProps) {
   const { content, sender, timestamp, isUser } = message;
-  
+
   const formatTime = (date: Date) => {
     return format(date, "h:mm a");
   };
@@ -12,7 +17,11 @@ export function MessageBubble({ message, showSenderInfo = true, showTimestamp = 
     return (
       <div className="flex justify-end mb-2">
         <div className="flex items-end gap-2">
-          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{formatTime(timestamp)}</span>}
+          {showTimestamp && (
+            <span className="text-xs text-gray-500 mb-1">
+              {formatTime(timestamp)}
+            </span>
+          )}
           <div className="bg-yellow-300 rounded-2xl rounded-tr-md px-3 py-2 max-w-xs">
             <span className="text-black">{content}</span>
           </div>
@@ -21,22 +30,20 @@ export function MessageBubble({ message, showSenderInfo = true, showTimestamp = 
     );
   }
 
+  console.log(showSenderInfo, sender);
+
   return (
     <div className="flex items-start gap-2 mb-2">
       {showSenderInfo ? (
-        <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-          {sender.avatar ? (
-            <img
-              src={sender.avatar}
-              alt={sender.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-500 text-xs">{sender.name[0]}</span>
-            </div>
-          )}
-        </div>
+        <Avatar className="w-10 h-10 flex-shrink-0">
+          <AvatarImage
+            src={sender.avatar}
+            alt={sender.name}
+          />
+          <AvatarFallback className="bg-gray-200 text-gray-500 text-xs">
+            {sender.name}
+          </AvatarFallback>
+        </Avatar>
       ) : (
         <div className="w-10 h-10 flex-shrink-0" />
       )}
@@ -50,7 +57,11 @@ export function MessageBubble({ message, showSenderInfo = true, showTimestamp = 
           <div className="bg-white rounded-2xl rounded-tl-md px-3 py-2 max-w-xs shadow-sm">
             <span className="text-black">{content}</span>
           </div>
-          {showTimestamp && <span className="text-xs text-gray-500 mb-1">{formatTime(timestamp)}</span>}
+          {showTimestamp && (
+            <span className="text-xs text-gray-500 mb-1">
+              {formatTime(timestamp)}
+            </span>
+          )}
         </div>
       </div>
     </div>
