@@ -3,14 +3,11 @@ import { StatusBar } from "./StatusBar";
 import { ChatHeader } from "./ChatHeader";
 import { MessageBubble } from "./MessageBubble";
 import { ImageMessage } from "./ImageMessage";
-import { ChatInput } from "./ChatInput";
 import { KakaoTalkChatProps, Message } from "./types";
 
 export function KakaoTalkChat({
   messages,
   chatTitle,
-  onSendMessage,
-  onAttach,
   className = "",
 }: KakaoTalkChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -86,9 +83,6 @@ export function KakaoTalkChat({
       {/* Chat Header */}
       <ChatHeader
         title={chatTitle}
-        onBack={() => console.log("Back clicked")}
-        onSearch={() => console.log("Search clicked")}
-        onMenu={() => console.log("Menu clicked")}
       />
 
       {/* Messages Area */}
@@ -96,14 +90,6 @@ export function KakaoTalkChat({
         {messages.map((message, index) => renderMessage(message, index))}
         <div ref={messagesEndRef} />
       </div>
-
-      {/* Input Area */}
-      <ChatInput
-        onSendMessage={onSendMessage}
-        onAttach={onAttach}
-        onEmoji={() => console.log("Emoji clicked")}
-        onMore={() => console.log("More clicked")}
-      />
 
       {/* Home Indicator */}
       <div className="bg-white pb-2 flex justify-center">

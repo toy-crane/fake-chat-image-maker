@@ -119,21 +119,6 @@ export default function Home() {
     setMessages((prev) => [...prev, newMessage]);
   };
 
-  const handleSendMessage = (message: string) => {
-    const now = new Date();
-    handleAddMessage({
-      content: message,
-      isUserMessage: true,
-      type: "text",
-      hour: now.getHours(),
-      minute: now.getMinutes(),
-    });
-  };
-
-  const handleAttach = () => {
-    console.log("Attach clicked");
-    // Here you would typically open file picker
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -156,10 +141,7 @@ export default function Home() {
           <div className="flex justify-center">
             <KakaoTalkChat
               messages={messages}
-              currentUser={currentUser}
               chatTitle={otherUser.name}
-              onSendMessage={handleSendMessage}
-              onAttach={handleAttach}
             />
           </div>
         </div>

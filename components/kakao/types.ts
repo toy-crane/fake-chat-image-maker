@@ -31,9 +31,6 @@ export interface StatusBarProps {
 
 export interface ChatHeaderProps {
   title: string;
-  onBack?: () => void;
-  onSearch?: () => void;
-  onMenu?: () => void;
 }
 
 export interface MessageBubbleProps {
@@ -56,9 +53,6 @@ export interface ChatInputProps {
 
 export interface KakaoTalkChatProps {
   messages: Message[];
-  currentUser: User;
   chatTitle: string;
-  onSendMessage?: (message: string) => void;
-  onAttach?: () => void;
   className?: string;
 }
