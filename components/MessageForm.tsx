@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Send, User, Users, Image as ImageIcon, X, UserPlus } from "lucide-react";
+import { Send, User, Users, Image as ImageIcon, X, UserPlus, RotateCcw } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -24,12 +24,16 @@ interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
   currentUserName?: string;
   otherUserName?: string;
+  onClearMessages?: () => void;
+  messagesCount?: number;
 }
 
 export function MessageForm({
   onAddMessage,
   currentUserName,
   otherUserName,
+  onClearMessages,
+  messagesCount = 0,
 }: MessageFormProps) {
   const [isUserMessage, setIsUserMessage] = useState(true);
   const [messageType, setMessageType] = useState<"text" | "image">("text");
@@ -176,9 +180,24 @@ export function MessageForm({
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Add Message</span>
-          <div className="flex items-center gap-2 text-sm font-normal">
-            <kbd className="px-2 py-1 text-xs bg-muted rounded">Tab</kbd>
-            <span className="text-muted-foreground">to switch sender</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm font-normal">
+              <kbd className="px-2 py-1 text-xs bg-muted rounded">Tab</kbd>
+              <span className="text-muted-foreground">to switch sender</span>
+            </div>
+            {onClearMessages && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onClearMessages}
+                disabled={messagesCount === 0}
+                className="flex items-center gap-2"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reset Messages
+              </Button>
+            )}
           </div>
         </CardTitle>
       </CardHeader>

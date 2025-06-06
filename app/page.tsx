@@ -6,8 +6,6 @@ import { ProfileForm } from "../components/ProfileForm";
 import { ChatProvider, useChatContext } from "@/lib/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
 
 function ChatInterface() {
   const { messages, addMessage, currentUser, otherUser, updateUsers, clearMessages } =
@@ -31,18 +29,7 @@ function ChatInterface() {
           <div className="xl:col-span-3">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Chat Setup</CardTitle>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearMessages}
-                    disabled={messages.length === 0}
-                  >
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    Reset Messages
-                  </Button>
-                </div>
+                <CardTitle>Chat Setup</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="profiles">
@@ -70,6 +57,8 @@ function ChatInterface() {
                       onAddMessage={addMessage}
                       currentUserName={currentUser?.name}
                       otherUserName={otherUser?.name}
+                      onClearMessages={clearMessages}
+                      messagesCount={messages.length}
                     />
                   </TabsContent>
                 </Tabs>
