@@ -16,7 +16,15 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Send, User, Users, Image as ImageIcon, X, UserPlus, RotateCcw } from "lucide-react";
+import {
+  Send,
+  User,
+  Users,
+  Image as ImageIcon,
+  X,
+  UserPlus,
+  RotateCcw,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -165,8 +173,9 @@ export function MessageForm({
             <div className="space-y-2">
               <h3 className="font-semibold text-lg">Set up profiles first</h3>
               <p className="text-muted-foreground max-w-sm">
-                You need to create user profiles before you can start adding messages. 
-                Switch to the Profiles tab to add your name and your chat partner&apos;s name.
+                You need to create user profiles before you can start adding
+                messages. Switch to the Profiles tab to add your name and your
+                chat partner&apos;s name.
               </p>
             </div>
           </div>
@@ -180,11 +189,7 @@ export function MessageForm({
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Add Message</span>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm font-normal">
-              <kbd className="px-2 py-1 text-xs bg-muted rounded">Tab</kbd>
-              <span className="text-muted-foreground">to switch sender</span>
-            </div>
+          <div className="flex items-center gap-4 flex-col">
             {onClearMessages && (
               <Button
                 type="button"
@@ -206,6 +211,11 @@ export function MessageForm({
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4"
         >
+          {/* Tab to switch sender */}
+          <div className="flex items-center justify-end gap-1 text-sm font-normal">
+            <kbd className="px-2 py-1 text-xs bg-muted rounded">Tab</kbd>
+            <span className="text-muted-foreground">to switch sender</span>
+          </div>
           {/* Sender Toggle */}
           <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
