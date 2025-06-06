@@ -47,6 +47,7 @@ function TestComponent() {
     editMessage,
     deleteMessage,
     clearMessages,
+    updateUsers,
   } = useChatContext();
 
   return (
@@ -106,6 +107,17 @@ function TestComponent() {
         onClick={() => clearMessages()}
       >
         Clear Messages
+      </button>
+      <button
+        data-testid="update-users"
+        onClick={() =>
+          updateUsers(
+            { id: "new-current", name: "New Current User", avatar: "new-avatar1.jpg" },
+            { id: "new-other", name: "New Other User", avatar: "new-avatar2.jpg" }
+          )
+        }
+      >
+        Update Users
       </button>
     </div>
   );
@@ -451,6 +463,173 @@ describe("ChatContext", () => {
       });
 
       expect(screen.getByTestId("messages-count")).toHaveTextContent("0");
+    });
+  });
+
+  describe("updateUsers", () => {
+    it("updates currentUser and otherUser correctly", () => {
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestComponent />
+        </ChatProvider>
+      );
+
+      expect(screen.getByTestId("current-user")).toHaveTextContent("Current User");
+      expect(screen.getByTestId("other-user")).toHaveTextContent("Other User");
+
+      act(() => {
+        screen.getByTestId("update-users").click();
+      });
+
+      expect(screen.getByTestId("current-user")).toHaveTextContent("New Current User");
+      expect(screen.getByTestId("other-user")).toHaveTextContent("New Other User");
+    });
+
+    it("updates existing message senders when users are updated", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestUpdateUsersWithMessages() {
+        const { messages, addMessage, updateUsers } = useChatContext();
+        capturedMessages = messages;
+
+        return (
+          <div>
+            <button
+              data-testid="add-message"
+              onClick={() =>
+                addMessage({
+                  type: "text",
+                  content: "Test message",
+                  isUserMessage: true,
+                  hour: 10,
+                  minute: 0,
+                })
+              }
+            >
+              Add Message
+            </button>
+            <button
+              data-testid="update-users"
+              onClick={() =>
+                updateUsers(
+                  { id: "updated-current", name: "Updated Current", avatar: "updated1.jpg" },
+                  { id: "updated-other", name: "Updated Other", avatar: "updated2.jpg" }
+                )
+              }
+            >
+              Update Users
+            </button>
+          </div>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestUpdateUsersWithMessages />
+        </ChatProvider>
+      );
+
+      // Add a message first
+      act(() => {
+        screen.getByTestId("add-message").click();
+      });
+
+      expect(capturedMessages[0].sender.name).toBe("Current User");
+
+      // Update users
+      act(() => {
+        screen.getByTestId("update-users").click();
+      });
+
+      // Check that the message sender was updated
+      expect(capturedMessages[0].sender.name).toBe("Updated Current");
+      expect(capturedMessages[0].sender.id).toBe("updated-current");
+    });
+
+    it("correctly maps message senders based on isUser flag", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestMixedMessages() {
+        const { messages, addMessage, updateUsers } = useChatContext();
+        capturedMessages = messages;
+
+        return (
+          <div>
+            <button
+              data-testid="add-user-message"
+              onClick={() =>
+                addMessage({
+                  type: "text",
+                  content: "User message",
+                  isUserMessage: true,
+                  hour: 10,
+                  minute: 0,
+                })
+              }
+            >
+              Add User Message
+            </button>
+            <button
+              data-testid="add-other-message"
+              onClick={() =>
+                addMessage({
+                  type: "text",
+                  content: "Other message",
+                  isUserMessage: false,
+                  hour: 10,
+                  minute: 5,
+                })
+              }
+            >
+              Add Other Message
+            </button>
+            <button
+              data-testid="update-users"
+              onClick={() =>
+                updateUsers(
+                  { id: "new-user", name: "New User", avatar: "new1.jpg" },
+                  { id: "new-other", name: "New Other", avatar: "new2.jpg" }
+                )
+              }
+            >
+              Update Users
+            </button>
+          </div>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestMixedMessages />
+        </ChatProvider>
+      );
+
+      // Add messages from both users
+      act(() => {
+        screen.getByTestId("add-user-message").click();
+        screen.getByTestId("add-other-message").click();
+      });
+
+      expect(capturedMessages[0].sender.name).toBe("Current User");
+      expect(capturedMessages[1].sender.name).toBe("Other User");
+
+      // Update users
+      act(() => {
+        screen.getByTestId("update-users").click();
+      });
+
+      // Check that both message senders were updated correctly
+      expect(capturedMessages[0].sender.name).toBe("New User"); // isUser: true
+      expect(capturedMessages[1].sender.name).toBe("New Other"); // isUser: false
     });
   });
 });
