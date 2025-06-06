@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { StatusBar } from "./StatusBar";
 import { ChatHeader } from "./ChatHeader";
 import { MessageBubble } from "./MessageBubble";
@@ -11,15 +10,6 @@ export function KakaoTalkChat({
   chatTitle,
   className = "",
 }: KakaoTalkChatProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
   const renderMessage = (message: Message, index: number) => {
     let showSenderInfo = true;
     let showTimestamp = true;
@@ -87,7 +77,6 @@ export function KakaoTalkChat({
       {/* Messages Area */}
       <div className="flex-1 bg-blue-100 p-4 overflow-y-auto">
         {messages.map((message, index) => renderMessage(message, index))}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
