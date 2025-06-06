@@ -73,7 +73,7 @@ export function ProfileForm({
             className="flex items-center gap-2"
           >
             <RotateCcw className="h-4 w-4" />
-            Reset
+            Reset Profiles
           </Button>
         </CardTitle>
       </CardHeader>
