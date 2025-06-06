@@ -22,8 +22,8 @@ import Image from "next/image";
 
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
-  currentUserName: string;
-  otherUserName: string;
+  currentUserName?: string;
+  otherUserName?: string;
 }
 
 export function MessageForm({
@@ -190,7 +190,7 @@ export function MessageForm({
                     isUserMessage ? "font-semibold" : "text-muted-foreground"
                   }`}
                 >
-                  {currentUserName} (You)
+                  {currentUserName}
                 </span>
               </div>
             </div>
@@ -204,26 +204,32 @@ export function MessageForm({
           </div>
 
           {/* Message Content with Tabs */}
-          <Tabs 
-            value={messageType} 
+          <Tabs
+            value={messageType}
             onValueChange={(value) => setMessageType(value as "text" | "image")}
             className="w-full"
           >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="text">Text Message</TabsTrigger>
-              <TabsTrigger value="image" className="flex items-center gap-2">
+              <TabsTrigger
+                value="image"
+                className="flex items-center gap-2"
+              >
                 <ImageIcon className="w-4 h-4" />
                 Image
               </TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="text" className="space-y-2 mt-4">
+
+            <TabsContent
+              value="text"
+              className="space-y-2 mt-4"
+            >
               <Label htmlFor="content">Message</Label>
               <Textarea
                 id="content"
                 {...register("content")}
                 placeholder={`Type a message as ${
-                  isUserMessage ? currentUserName : otherUserName
+                  isUserMessage ? currentUserName! : otherUserName!
                 }...`}
                 className="min-h-[80px] resize-none"
                 onKeyDown={handleKeyDown}
@@ -234,8 +240,11 @@ export function MessageForm({
                 </p>
               )}
             </TabsContent>
-            
-            <TabsContent value="image" className="space-y-2 mt-4">
+
+            <TabsContent
+              value="image"
+              className="space-y-2 mt-4"
+            >
               <Label>Image</Label>
               <div className="space-y-3">
                 {!selectedImage ? (

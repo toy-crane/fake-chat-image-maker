@@ -6,8 +6,8 @@ import { MessageFormData } from "@/lib/schemas/message";
 
 interface ChatContextType {
   messages: Message[];
-  currentUser: User;
-  otherUser: User;
+  currentUser?: User;
+  otherUser?: User;
   addMessage: (data: MessageFormData) => void;
   editMessage: (id: string, data: Partial<MessageFormData>) => void;
   deleteMessage: (id: string) => void;
@@ -20,8 +20,8 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 interface ChatProviderProps {
   children: ReactNode;
   initialMessages?: Message[];
-  currentUser: User;
-  otherUser: User;
+  currentUser?: User;
+  otherUser?: User;
 }
 
 export function ChatProvider({
@@ -31,13 +31,22 @@ export function ChatProvider({
   otherUser: initialOtherUser,
 }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [currentUser, setCurrentUser] = useState<User>(initialCurrentUser);
-  const [otherUser, setOtherUser] = useState<User>(initialOtherUser);
+  const [currentUser, setCurrentUser] = useState<User | undefined>(
+    initialCurrentUser
+  );
+  const [otherUser, setOtherUser] = useState<User | undefined>(
+    initialOtherUser
+  );
 
   const addMessage = (data: MessageFormData) => {
     // Create Date from hour and minute
     const timestampDate = new Date();
     timestampDate.setHours(data.hour, data.minute, 0, 0);
+
+    if (!currentUser || !otherUser) {
+      console.error("Current user or other user is not set");
+      return;
+    }
 
     const baseMessage = {
       id: Date.now().toString(),
@@ -79,7 +88,7 @@ export function ChatProvider({
         // Update sender if isUserMessage changed
         let sender = message.sender;
         if (data.isUserMessage !== undefined) {
-          sender = data.isUserMessage ? currentUser : otherUser;
+          sender = data.isUserMessage ? currentUser! : otherUser!;
         }
 
         // Handle type changes and content updates
@@ -126,7 +135,7 @@ export function ChatProvider({
   const updateUsers = (newCurrentUser: User, newOtherUser: User) => {
     setCurrentUser(newCurrentUser);
     setOtherUser(newOtherUser);
-    
+
     // Update existing messages to use the new user information
     setMessages((prev) =>
       prev.map((message) => ({

@@ -11,25 +11,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Upload, Users } from "lucide-react";
 
 const profileFormSchema = z.object({
-  currentUser: z.object({
-    name: z.string().min(1, "Name required"),
-    avatar: z.string().optional(),
-  }),
-  otherUser: z.object({
-    name: z.string().min(1, "Name required"),
-    avatar: z.string().optional(),
-  }),
+  currentUser: z
+    .object({
+      name: z.string().min(1, "Name required"),
+      avatar: z.string().min(1, "Avatar required"),
+    })
+    .required(),
+  otherUser: z
+    .object({
+      name: z.string().min(1, "Name required"),
+      avatar: z.string().min(1, "Avatar required"),
+    })
+    .required(),
 });
 
 type ProfileFormData = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
-  currentUser: User;
-  otherUser: User;
+  currentUser?: User;
+  otherUser?: User;
   onUpdateUsers: (currentUser: User, otherUser: User) => void;
 }
 
-export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFormProps) {
+export function ProfileForm({
+  currentUser,
+  otherUser,
+  onUpdateUsers,
+}: ProfileFormProps) {
   const {
     register,
     handleSubmit,
@@ -40,18 +48,21 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       currentUser: {
-        name: currentUser.name,
-        avatar: currentUser.avatar || "",
+        name: currentUser?.name || "",
+        avatar: currentUser?.avatar || "",
       },
       otherUser: {
-        name: otherUser.name,
-        avatar: otherUser.avatar || "",
+        name: otherUser?.name || "",
+        avatar: otherUser?.avatar || "",
       },
     },
   });
 
-  const handleImageUpload = (file: File, userType: 'currentUser' | 'otherUser') => {
-    if (file && file.type.startsWith('image/')) {
+  const handleImageUpload = (
+    file: File,
+    userType: "currentUser" | "otherUser"
+  ) => {
+    if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
@@ -61,11 +72,10 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
     }
   };
 
-
   const onSubmit = (data: ProfileFormData) => {
     onUpdateUsers(
-      { ...currentUser, ...data.currentUser },
-      { ...otherUser, ...data.otherUser }
+      { ...currentUser!, ...data.currentUser },
+      { ...otherUser!, ...data.otherUser }
     );
   };
 
@@ -78,7 +88,10 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           {/* Current User */}
           <div className="space-y-4">
             <h3 className="font-medium">You</h3>
@@ -93,7 +106,9 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                   {...register("currentUser.name")}
                 />
                 {errors.currentUser?.name && (
-                  <p className="text-sm text-destructive">{errors.currentUser.name.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.currentUser.name.message}
+                  </p>
                 )}
               </div>
               <Button
@@ -101,12 +116,12 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  const input = document.createElement('input');
-                  input.type = 'file';
-                  input.accept = 'image/*';
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
                   input.onchange = (e) => {
                     const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) handleImageUpload(file, 'currentUser');
+                    if (file) handleImageUpload(file, "currentUser");
                   };
                   input.click();
                 }}
@@ -130,7 +145,9 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                   {...register("otherUser.name")}
                 />
                 {errors.otherUser?.name && (
-                  <p className="text-sm text-destructive">{errors.otherUser.name.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.otherUser.name.message}
+                  </p>
                 )}
               </div>
               <Button
@@ -138,12 +155,12 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  const input = document.createElement('input');
-                  input.type = 'file';
-                  input.accept = 'image/*';
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
                   input.onchange = (e) => {
                     const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) handleImageUpload(file, 'otherUser');
+                    if (file) handleImageUpload(file, "otherUser");
                   };
                   input.click();
                 }}
@@ -153,8 +170,12 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
             </div>
           </div>
 
-          <Button type="submit" disabled={!isDirty} className="w-full">
-            Update
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            className="w-full"
+          >
+            Save
           </Button>
         </form>
       </CardContent>
