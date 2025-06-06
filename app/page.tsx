@@ -8,8 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function ChatInterface() {
-  const { messages, addMessage, currentUser, otherUser, updateUsers, clearMessages } =
-    useChatContext();
+  const {
+    messages,
+    addMessage,
+    currentUser,
+    otherUser,
+    updateUsers,
+    clearMessages,
+  } = useChatContext();
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -29,7 +35,7 @@ function ChatInterface() {
           <div className="xl:col-span-3">
             <Card>
               <CardHeader>
-                <CardTitle>Chat Setup</CardTitle>
+                <CardTitle className="text-2xl">Chat Setup</CardTitle>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="profiles">
