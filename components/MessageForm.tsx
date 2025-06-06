@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Send, User, Users, Image as ImageIcon, X } from "lucide-react";
+import { Send, User, Users, Image as ImageIcon, X, UserPlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -145,6 +145,31 @@ export function MessageForm({
       setIsUserMessage(!isUserMessage);
     }
   };
+
+  // Show empty state if profiles aren't set up
+  if (!currentUserName || !otherUserName) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Add Message</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+            <div className="rounded-full bg-muted p-4">
+              <UserPlus className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">Set up profiles first</h3>
+              <p className="text-muted-foreground max-w-sm">
+                You need to create user profiles before you can start adding messages. 
+                Switch to the Profiles tab to add your name and your chat partner&apos;s name.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">
