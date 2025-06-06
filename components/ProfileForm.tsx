@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Upload, Users } from "lucide-react";
+import { Upload, Users, X } from "lucide-react";
 
 const profileFormSchema = z.object({
   currentUser: z.object({
@@ -93,10 +93,27 @@ export function ProfileForm({
           <div className="space-y-4">
             <h3 className="font-medium">You</h3>
             <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={watch("currentUser.avatar")} />
-                <AvatarFallback>You</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={watch("currentUser.avatar") || undefined} />
+                  <AvatarFallback>
+                    {watch("currentUser.name") || "You"}
+                  </AvatarFallback>
+                </Avatar>
+                {watch("currentUser.avatar") && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full"
+                    onClick={() =>
+                      setValue("currentUser.avatar", "", { shouldDirty: true })
+                    }
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
               <div className="flex-1 space-y-2">
                 <Input
                   placeholder="Your name"
@@ -137,10 +154,27 @@ export function ProfileForm({
           <div className="space-y-4">
             <h3 className="font-medium">Chat Partner</h3>
             <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={watch("otherUser.avatar")} />
-                <AvatarFallback>Other</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={watch("otherUser.avatar") || undefined} />
+                  <AvatarFallback>
+                    {watch("otherUser.name") || "Other"}
+                  </AvatarFallback>
+                </Avatar>
+                {watch("otherUser.avatar") && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full"
+                    onClick={() =>
+                      setValue("otherUser.avatar", "", { shouldDirty: true })
+                    }
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
               <div className="flex-1 space-y-2">
                 <Input
                   placeholder="Partner name"
