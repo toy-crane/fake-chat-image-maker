@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, X } from "lucide-react";
+import { Users, X, RotateCcw } from "lucide-react";
 
 interface ProfileFormProps {
   currentUser?: User;
@@ -32,6 +32,13 @@ export function ProfileForm({
     );
   };
 
+  const resetProfiles = () => {
+    onUpdateUsers(
+      { id: "me", name: "", avatar: "" },
+      { id: "other", name: "", avatar: "" }
+    );
+  };
+
   const handleImageUpload = (
     file: File,
     userType: "currentUser" | "otherUser"
@@ -53,9 +60,21 @@ export function ProfileForm({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          User Profiles
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            User Profiles
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={resetProfiles}
+            className="flex items-center gap-2"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Reset
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -65,7 +84,7 @@ export function ProfileForm({
             <h3 className="font-medium">You</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar 
+                <Avatar
                   className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => {
                     const input = document.createElement("input");
@@ -110,7 +129,7 @@ export function ProfileForm({
             <h3 className="font-medium">Chat Partner</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar 
+                <Avatar
                   className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => {
                     const input = document.createElement("input");
