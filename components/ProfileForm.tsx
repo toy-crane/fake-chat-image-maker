@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Upload, Users, X } from "lucide-react";
+import { Users, X } from "lucide-react";
 
 interface ProfileFormProps {
   currentUser?: User;
@@ -65,7 +65,19 @@ export function ProfileForm({
             <h3 className="font-medium">You</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-10 w-10">
+                <Avatar 
+                  className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) handleImageUpload(file, "currentUser");
+                    };
+                    input.click();
+                  }}
+                >
                   <AvatarImage src={currentUser?.avatar || undefined} />
                   <AvatarFallback className="text-sm">
                     {currentUser?.name || "You"}
@@ -90,23 +102,6 @@ export function ProfileForm({
                   onChange={(e) => updateCurrentUser({ name: e.target.value })}
                 />
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/*";
-                  input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) handleImageUpload(file, "currentUser");
-                  };
-                  input.click();
-                }}
-              >
-                <Upload className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
@@ -115,7 +110,19 @@ export function ProfileForm({
             <h3 className="font-medium">Chat Partner</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-10 w-10">
+                <Avatar 
+                  className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) handleImageUpload(file, "otherUser");
+                    };
+                    input.click();
+                  }}
+                >
                   <AvatarImage src={otherUser?.avatar || undefined} />
                   <AvatarFallback className="text-sm">
                     {otherUser?.name || "Other"}
@@ -140,23 +147,6 @@ export function ProfileForm({
                   onChange={(e) => updateOtherUser({ name: e.target.value })}
                 />
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/*";
-                  input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) handleImageUpload(file, "otherUser");
-                  };
-                  input.click();
-                }}
-              >
-                <Upload className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>
