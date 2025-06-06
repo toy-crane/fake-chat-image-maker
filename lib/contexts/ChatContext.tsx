@@ -12,6 +12,7 @@ interface ChatContextType {
   editMessage: (id: string, data: Partial<MessageFormData>) => void;
   deleteMessage: (id: string) => void;
   clearMessages: () => void;
+  updateUsers: (currentUser: User, otherUser: User) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -26,10 +27,12 @@ interface ChatProviderProps {
 export function ChatProvider({
   children,
   initialMessages = [],
-  currentUser,
-  otherUser,
+  currentUser: initialCurrentUser,
+  otherUser: initialOtherUser,
 }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [currentUser, setCurrentUser] = useState<User>(initialCurrentUser);
+  const [otherUser, setOtherUser] = useState<User>(initialOtherUser);
 
   const addMessage = (data: MessageFormData) => {
     // Create Date from hour and minute
@@ -120,6 +123,19 @@ export function ChatProvider({
     setMessages([]);
   };
 
+  const updateUsers = (newCurrentUser: User, newOtherUser: User) => {
+    setCurrentUser(newCurrentUser);
+    setOtherUser(newOtherUser);
+    
+    // Update existing messages to use the new user information
+    setMessages((prev) =>
+      prev.map((message) => ({
+        ...message,
+        sender: message.isUser ? newCurrentUser : newOtherUser,
+      }))
+    );
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -130,6 +146,7 @@ export function ChatProvider({
         editMessage,
         deleteMessage,
         clearMessages,
+        updateUsers,
       }}
     >
       {children}
