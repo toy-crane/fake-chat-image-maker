@@ -43,9 +43,10 @@ export function ProfileForm({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isDirty },
+    formState: { errors, isValid },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileFormSchema),
+    mode: "onChange",
     defaultValues: {
       currentUser: {
         name: currentUser?.name || "",
@@ -57,6 +58,8 @@ export function ProfileForm({
       },
     },
   });
+
+  console.log("errors", errors.otherUser, isValid);
 
   const handleImageUpload = (
     file: File,
@@ -129,6 +132,11 @@ export function ProfileForm({
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
+            {errors.currentUser?.avatar && (
+              <p className="text-sm text-destructive">
+                {errors.currentUser.avatar.message}
+              </p>
+            )}
           </div>
 
           {/* Other User */}
@@ -168,11 +176,16 @@ export function ProfileForm({
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
+            {errors.otherUser?.avatar && (
+              <p className="text-sm text-destructive">
+                {errors.otherUser.avatar.message}
+              </p>
+            )}
           </div>
 
           <Button
             type="submit"
-            disabled={!isDirty}
+            disabled={!isValid}
             className="w-full"
           >
             Save
