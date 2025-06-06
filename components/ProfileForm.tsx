@@ -14,13 +14,13 @@ const profileFormSchema = z.object({
   currentUser: z
     .object({
       name: z.string().min(1, "Name required"),
-      avatar: z.string().min(1, "Avatar required"),
+      avatar: z.string().optional(),
     })
     .required(),
   otherUser: z
     .object({
       name: z.string().min(1, "Name required"),
-      avatar: z.string().min(1, "Avatar required"),
+      avatar: z.string().optional(),
     })
     .required(),
 });
@@ -49,17 +49,13 @@ export function ProfileForm({
     mode: "onChange",
     defaultValues: {
       currentUser: {
-        name: currentUser?.name || "",
-        avatar: currentUser?.avatar || "",
+        name: currentUser?.name,
       },
       otherUser: {
-        name: otherUser?.name || "",
-        avatar: otherUser?.avatar || "",
+        name: otherUser?.name,
       },
     },
   });
-
-  console.log("errors", errors.otherUser, isValid);
 
   const handleImageUpload = (
     file: File,
@@ -76,6 +72,7 @@ export function ProfileForm({
   };
 
   const onSubmit = (data: ProfileFormData) => {
+    console.log("data", data);
     onUpdateUsers(
       { ...currentUser!, ...data.currentUser },
       { ...otherUser!, ...data.otherUser }
@@ -145,7 +142,7 @@ export function ProfileForm({
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12">
                 <AvatarImage src={watch("otherUser.avatar")} />
-                <AvatarFallback>CP</AvatarFallback>
+                <AvatarFallback>Other</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-2">
                 <Input
