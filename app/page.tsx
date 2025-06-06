@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { KakaoTalkChat, Message, User } from "../components/kakao";
 import { MessageForm } from "../components/MessageForm";
-import { MessageFormData } from "@/lib/schemas/message";
+import { ChatProvider, useChatContext } from "@/lib/contexts/ChatContext";
 
 // Sample data
 const currentUser: User = {
@@ -87,38 +86,8 @@ const initialMessages: Message[] = [
   },
 ];
 
-export default function Home() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
-
-  const handleAddMessage = (data: MessageFormData) => {
-    // Create Date from hour and minute
-    const timestampDate = new Date();
-    timestampDate.setHours(data.hour, data.minute, 0, 0);
-
-    const baseMessage = {
-      id: Date.now().toString(),
-      sender: data.isUserMessage ? currentUser : otherUser,
-      timestamp: timestampDate,
-      isUser: data.isUserMessage,
-    };
-
-    const newMessage: Message =
-      data.type === "text"
-        ? {
-            ...baseMessage,
-            type: "text",
-            content: data.content || "",
-          }
-        : {
-            ...baseMessage,
-            type: "image",
-            imageUrl: data.imageUrl!,
-            alt: data.imageAlt || "Uploaded image",
-          };
-
-    setMessages((prev) => [...prev, newMessage]);
-  };
-
+function ChatInterface() {
+  const { messages, addMessage, currentUser, otherUser } = useChatContext();
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -131,7 +100,7 @@ export default function Home() {
           {/* Message Form */}
           <div className="space-y-6">
             <MessageForm
-              onAddMessage={handleAddMessage}
+              onAddMessage={addMessage}
               currentUserName={currentUser.name}
               otherUserName={otherUser.name}
             />
@@ -147,5 +116,17 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <ChatProvider
+      initialMessages={initialMessages}
+      currentUser={currentUser}
+      otherUser={otherUser}
+    >
+      <ChatInterface />
+    </ChatProvider>
   );
 }
