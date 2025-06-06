@@ -93,7 +93,7 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                   {...register("currentUser.name")}
                 />
                 {errors.currentUser?.name && (
-                  <p className="text-sm text-red-500">{errors.currentUser.name.message}</p>
+                  <p className="text-sm text-destructive">{errors.currentUser.name.message}</p>
                 )}
               </div>
               <Button
@@ -130,7 +130,7 @@ export function ProfileForm({ currentUser, otherUser, onUpdateUsers }: ProfileFo
                   {...register("otherUser.name")}
                 />
                 {errors.otherUser?.name && (
-                  <p className="text-sm text-red-500">{errors.otherUser.name.message}</p>
+                  <p className="text-sm text-destructive">{errors.otherUser.name.message}</p>
                 )}
               </div>
               <Button
