@@ -21,11 +21,14 @@ export function InstagramDMChat({ onExportChat }: InstagramDMChatProps) {
   };
 
   const handleSendMessage = (content: string) => {
+    const now = new Date();
+    const timeString = now.toTimeString().slice(0, 5);
+    
     addMessage({
       type: "text",
       content,
-      sender: "me",
-      timestamp: new Date().toTimeString().slice(0, 5),
+      isUserMessage: true,
+      time: timeString,
     });
   };
 
