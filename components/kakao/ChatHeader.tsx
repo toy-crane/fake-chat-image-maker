@@ -1,9 +1,9 @@
-import { ChevronLeft, Search, Menu } from 'lucide-react';
-import { ChatHeaderProps } from './types';
+import { ChevronLeft, Search, Menu } from "lucide-react";
+import { ChatHeaderProps } from "./types";
 
 export function ChatHeader({ title }: ChatHeaderProps) {
   return (
-    <div className="bg-gray-100 px-4 py-2 flex items-center justify-between border-b border-gray-200">
+    <div className="bg-blue-100 px-4 py-2 flex items-center justify-between border-b border-gray-200">
       <div className="flex items-center gap-3">
         <div className="p-1">
           <ChevronLeft className="w-5 h-5" />
