@@ -12,6 +12,7 @@ export function KakaoTalkChat({
   const renderMessage = (message: Message, index: number) => {
     let showSenderInfo = true;
     let showTimestamp = true;
+    let addExtraMargin = false;
 
     // Check with previous message for sender info (avatar/name)
     if (index > 0) {
@@ -25,6 +26,9 @@ export function KakaoTalkChat({
         prevMessage.timestamp.getMinutes() === message.timestamp.getMinutes()
       ) {
         showSenderInfo = false;
+      } else {
+        // Add extra margin when switching between different senders
+        addExtraMargin = true;
       }
     }
 
@@ -44,12 +48,13 @@ export function KakaoTalkChat({
     }
 
     return (
-      <ChatMessage
-        key={message.id}
-        message={message}
-        showSenderInfo={showSenderInfo}
-        showTimestamp={showTimestamp}
-      />
+      <div key={message.id} className={addExtraMargin ? "mt-3" : ""}>
+        <ChatMessage
+          message={message}
+          showSenderInfo={showSenderInfo}
+          showTimestamp={showTimestamp}
+        />
+      </div>
     );
   };
 
@@ -64,7 +69,7 @@ export function KakaoTalkChat({
       <ChatHeader title={chatTitle} />
 
       {/* Messages Area */}
-      <div className="flex-1 bg-blue-100 p-4 overflow-y-auto">
+      <div className="flex-1 bg-blue-100 p-3 overflow-y-auto">
         {messages.map((message, index) => renderMessage(message, index))}
       </div>
 

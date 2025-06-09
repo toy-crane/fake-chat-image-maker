@@ -18,8 +18,8 @@ export function ChatMessage({
   const renderContent = () => {
     if (message.type === "text") {
       return (
-        <div className="bg-white rounded-2xl rounded-tl-md px-3 py-2 max-w-xs shadow-sm">
-          <span className="text-black">{message.content}</span>
+        <div className="bg-white rounded-xl rounded-tl-sm px-2 py-1.5 max-w-xs shadow-sm">
+          <span className="text-black text-sm">{message.content}</span>
         </div>
       );
     } else if (message.type === "image") {
@@ -42,8 +42,8 @@ export function ChatMessage({
   const renderUserContent = () => {
     if (message.type === "text") {
       return (
-        <div className="bg-yellow-300 rounded-2xl rounded-tr-md px-3 py-2 max-w-xs">
-          <span className="text-black">{message.content}</span>
+        <div className="bg-yellow-300 rounded-xl rounded-tr-sm px-2 py-1.5 max-w-xs">
+          <span className="text-black text-sm">{message.content}</span>
         </div>
       );
     } else if (message.type === "image") {
@@ -64,10 +64,10 @@ export function ChatMessage({
 
   if (isUser) {
     return (
-      <div className="flex justify-end mb-2">
-        <div className="flex items-end gap-2">
+      <div className="flex justify-end mb-1">
+        <div className="flex items-end gap-1.5">
           {showTimestamp && (
-            <span className="text-xs text-gray-500 mb-1 whitespace-nowrap">
+            <span className="text-xs text-gray-500 mb-0.5 whitespace-nowrap">
               {formatTime(timestamp)}
             </span>
           )}
@@ -78,9 +78,9 @@ export function ChatMessage({
   }
 
   return (
-    <div className="flex items-start gap-2 mb-2">
+    <div className="flex items-start gap-1.5 mb-1">
       {showSenderInfo ? (
-        <Avatar className="w-10 h-10 flex-shrink-0">
+        <Avatar className="w-8 h-8 flex-shrink-0">
           <AvatarImage
             src={sender.avatar || undefined}
             alt={sender.name}
@@ -88,18 +88,18 @@ export function ChatMessage({
           <AvatarFallback className="text-sm">{sender.name}</AvatarFallback>
         </Avatar>
       ) : (
-        <div className="w-10 h-10 flex-shrink-0" />
+        <div className="w-8 h-8 flex-shrink-0" />
       )}
       <div className="flex flex-col">
         {showSenderInfo && (
-          <span className="text-sm font-medium text-gray-700 mb-1">
+          <span className="text-xs font-medium text-gray-700 mb-0.5">
             {sender.name}
           </span>
         )}
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-1.5">
           {renderContent()}
           {showTimestamp && (
-            <span className="text-xs text-gray-500 mb-1 whitespace-nowrap">
+            <span className="text-xs text-gray-500 mb-0.5 whitespace-nowrap">
               {formatTime(timestamp)}
             </span>
           )}
