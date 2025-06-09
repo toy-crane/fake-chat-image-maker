@@ -2,7 +2,13 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { messageFormSchema, MessageFormData, bulkImportSchema, BulkImportData } from "@/lib/schemas/message";
+import {
+  messageFormSchema,
+  MessageFormData,
+  bulkImportSchema,
+  BulkImportData,
+} from "@/lib/schemas/message";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -33,6 +39,21 @@ import {
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+const JSON_FORMAT_EXAMPLE = `[
+  {
+    "type": "text",
+    "content": "Hello world!",
+    "isUserMessage": true,
+    "time": "14:30"
+  },
+  {
+    "type": "image", 
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+    "imageAlt": "Photo description",
+    "isUserMessage": false,
+    "time": "14:35"
+  }
+]`;
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
   onAddBulkMessages?: (data: BulkImportData) => void;
@@ -123,7 +144,9 @@ export function MessageForm({
     setValue("imageAlt", "");
   };
 
-  const handleJsonFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleJsonFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -132,10 +155,10 @@ export function MessageForm({
     try {
       const text = await file.text();
       const jsonData = JSON.parse(text);
-      
+
       // Validate the JSON structure
       const validatedData = bulkImportSchema.parse(jsonData);
-      
+
       // Call the bulk import function if available
       if (onAddBulkMessages) {
         onAddBulkMessages(validatedData);
@@ -143,11 +166,15 @@ export function MessageForm({
       }
     } catch (error) {
       if (error instanceof SyntaxError) {
-        setImportError("Invalid JSON format. Please check your file and try again.");
+        setImportError(
+          "Invalid JSON format. Please check your file and try again."
+        );
       } else if (error instanceof Error) {
         setImportError(`Validation errors: ${error.message}`);
       } else {
-        setImportError("An unexpected error occurred while processing the file.");
+        setImportError(
+          "An unexpected error occurred while processing the file."
+        );
       }
     }
 
@@ -225,7 +252,10 @@ export function MessageForm({
           <span>Add Message</span>
           <div className="flex items-center gap-2">
             {onAddBulkMessages && (
-              <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+              <Dialog
+                open={showImportDialog}
+                onOpenChange={setShowImportDialog}
+              >
                 <DialogTrigger asChild>
                   <Button
                     type="button"
@@ -237,15 +267,16 @@ export function MessageForm({
                     Import JSON
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
                   <DialogHeader>
                     <DialogTitle>Import Messages from JSON</DialogTitle>
                     <DialogDescription>
-                      Upload a JSON file containing an array of messages to bulk import them.
+                      Upload a JSON file containing an array of messages to bulk
+                      import them.
                     </DialogDescription>
                   </DialogHeader>
-                  
-                  <div className="space-y-4">
+
+                  <div className="space-y-4 overflow-y-auto flex-1">
                     {/* JSON Format Documentation */}
                     <div className="space-y-3">
                       <h4 className="font-medium">Required JSON Format</h4>
@@ -254,21 +285,7 @@ export function MessageForm({
                           Array of message objects with the following structure:
                         </p>
                         <pre className="text-xs overflow-x-auto">
-{`[
-  {
-    "type": "text",
-    "content": "Hello world!",
-    "isUserMessage": true,
-    "time": "14:30"
-  },
-  {
-    "type": "image", 
-    "imageUrl": "data:image/png;base64,abc123...",
-    "imageAlt": "Photo description",
-    "isUserMessage": false,
-    "time": "14:35"
-  }
-]`}
+                          {JSON_FORMAT_EXAMPLE}
                         </pre>
                       </div>
                     </div>
@@ -282,7 +299,13 @@ export function MessageForm({
                           Copy this prompt to your AI assistant:
                         </p>
                         <div className="bg-white p-3 rounded border text-xs font-mono">
-                          Generate a JSON array of realistic chat messages using this format. Include a mix of text and image messages with natural conversation flow. Use &quot;isUserMessage&quot;: true/false to alternate between speakers. Set realistic time timestamps in HH:MM format. For image messages, use placeholder data URLs or descriptions.
+                          Generate a JSON array of realistic chat messages using
+                          this format. Include a mix of text and image messages
+                          with natural conversation flow. Use
+                          &quot;isUserMessage&quot;: true/false to alternate
+                          between speakers. Set realistic time timestamps in
+                          HH:MM format. For image messages, use placeholder data
+                          URLs or descriptions.
                         </div>
                       </div>
                     </div>
@@ -303,7 +326,9 @@ export function MessageForm({
                           className="cursor-pointer flex flex-col items-center gap-2"
                         >
                           <Upload className="w-8 h-8 text-muted-foreground" />
-                          <span className="text-sm font-medium">Choose JSON file</span>
+                          <span className="text-sm font-medium">
+                            Choose JSON file
+                          </span>
                           <span className="text-xs text-muted-foreground">
                             .json files only
                           </span>
