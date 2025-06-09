@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fake Chat Image Maker - A web app for creating realistic KakaoTalk chat screenshots. Users can configure profiles, add messages, and export the chat as an image.
+Fake Chat Image Maker - A web app for creating realistic chat screenshots for both KakaoTalk and Apple Messages. Users can configure profiles, add messages, and export the chat as an image with a toggle to switch between messaging platforms.
 
 ## Commands
 
@@ -29,16 +29,33 @@ bun lint        # Run ESLint
 ### Core Components
 
 - **ChatContext** (`lib/contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
-- **KakaoTalkChat** (`components/kakao/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
-- **MessageForm** (`components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
-- **ProfileForm** (`components/ProfileForm.tsx`): User profile configuration
+- **KakaoTalkChat** (`features/chat/components/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
+- **AppleMessageChat** (`features/chat/components/AppleMessageChat.tsx`): Main chat UI component that renders the Apple Messages interface with iOS-style design and layout.
+- **MessageForm** (`features/chat/components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
+- **ProfileForm** (`features/chat/components/ProfileForm.tsx`): User profile configuration
+
+### Apple Messages Components
+
+- **AppleStatusBar** (`features/chat/components/AppleStatusBar.tsx`): iOS-style status bar with time, signal, wifi, and battery indicators
+- **AppleHeader** (`features/chat/components/AppleHeader.tsx`): Navigation header with back arrow, contact name, and profile circle
+- **AppleChatMessage** (`features/chat/components/AppleChatMessage.tsx`): Message bubbles with Apple's gray/green styling and proper alignment
+- **AppleChatInput** (`features/chat/components/AppleChatInput.tsx`): SMS input field with microphone icon and attachment button
 
 ### Data Flow
 
 1. ChatProvider wraps the application
 2. Forms update chat state via context methods
-3. KakaoTalkChat renders real-time preview
-4. Export functionality captures the chat container as PNG
+3. Interface toggle determines which chat component to render (KakaoTalk or Apple Messages)
+4. Both chat interfaces share the same data from ChatContext
+5. Export functionality captures the chat container as PNG
+
+### Interface Toggle
+
+The application includes a toggle switch in the header that allows users to switch between:
+- **KakaoTalk Mode**: Yellow-themed chat interface with KakaoTalk styling
+- **Apple Messages Mode**: iOS-themed chat interface with Apple Messages styling
+
+Both interfaces use the same underlying data structure and support all features (message types, export, etc.).
 
 ### Testing
 
