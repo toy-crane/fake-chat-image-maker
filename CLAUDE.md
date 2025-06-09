@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fake Chat Image Maker - A web app for creating realistic KakaoTalk chat screenshots. Users can configure profiles, add messages, and export the chat as an image.
+Fake Chat Image Maker - A web app for creating realistic chat screenshots in multiple styles. Users can configure profiles, add messages, and export chats as images. Supports both KakaoTalk and Discord chat styles.
 
 ## Commands
 
@@ -28,17 +28,25 @@ bun lint        # Run ESLint
 
 ### Core Components
 
-- **ChatContext** (`lib/contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
-- **KakaoTalkChat** (`components/kakao/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
-- **MessageForm** (`components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
-- **ProfileForm** (`components/ProfileForm.tsx`): User profile configuration
+- **ChatContext** (`contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
+- **KakaoTalkChat** (`features/chat/components/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
+- **DiscordChat** (`features/chat/components/DiscordChat.tsx`): Main Discord-style chat UI component with dark theme and server/channel layout.
+- **MessageForm** (`features/chat/components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
+- **ProfileForm** (`features/chat/components/ProfileForm.tsx`): User profile configuration
+
+#### Discord Chat Components
+
+- **DiscordMessage** (`features/chat/components/DiscordMessage.tsx`): Individual message rendering with Discord's dark theme, role-based username colors, and message grouping logic
+- **DiscordHeader** (`features/chat/components/DiscordHeader.tsx`): Channel header component displaying server name, channel name with # prefix, member count, and action buttons
+- **DiscordInput** (`features/chat/components/DiscordInput.tsx`): Message input field with Discord-style styling, emoji/attachment buttons, and send functionality
 
 ### Data Flow
 
 1. ChatProvider wraps the application
-2. Forms update chat state via context methods
-3. KakaoTalkChat renders real-time preview
-4. Export functionality captures the chat container as PNG
+2. User selects chat type (KakaoTalk or Discord) in Chat Type tab
+3. Forms update chat state via context methods
+4. Selected chat component (KakaoTalkChat or DiscordChat) renders real-time preview
+5. Export functionality captures the chat container as PNG with appropriate dimensions and styling
 
 ### Testing
 
@@ -66,7 +74,13 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 
 - Tailwind CSS v4 with CSS variables defined in `app/globals.css`
 - Prefer semantic color tokens (e.g., `bg-background`, `text-foreground`) over hardcoded colors
-- KakaoTalk-specific styles are component-scoped
+- KakaoTalk-specific styles are component-scoped with mobile-first design
+- Discord-specific styles use dark theme with gray color palette:
+  - `bg-gray-800` for main chat background
+  - `bg-gray-700` for header and UI elements
+  - `bg-gray-600` for input fields
+  - Role-based username colors (red, blue, green, yellow, purple, pink, indigo, orange)
+  - Message grouping within 5-minute windows (Discord-style)
 
 ### JSON Import Feature
 
