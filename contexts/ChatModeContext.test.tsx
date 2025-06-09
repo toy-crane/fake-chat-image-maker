@@ -93,7 +93,7 @@ describe("ChatModeContext", () => {
       expect(screen.getByTestId("current-mode")).toHaveTextContent("kakaotalk");
     });
 
-    it("maintains state between re-renders", () => {
+    it("resets state when provider is recreated", () => {
       const { rerender } = render(
         <ChatModeProvider>
           <TestComponent />

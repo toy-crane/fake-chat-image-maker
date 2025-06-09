@@ -27,7 +27,7 @@ const mockTextMessage: Message = {
 const mockImageMessage: Message = {
   id: "2",
   type: "image", 
-  imageUrl: "test-image.jpg",
+  imageUrl: "/test-image.jpg",
   alt: "Test image",
   sender: mockOtherUser,
   timestamp: new Date("2024-01-01T10:05:00Z"),
@@ -79,7 +79,7 @@ describe("InstagramMessage", () => {
       expect(messageContainer).toHaveClass("justify-end");
 
       const image = screen.getByRole("img");
-      expect(image).toHaveAttribute("src", "test-image.jpg");
+      expect(image).toHaveAttribute("src", "/test-image.jpg");
       expect(image).toHaveAttribute("alt", "Test image");
     });
 
@@ -165,7 +165,7 @@ describe("InstagramMessage", () => {
       );
 
       const image = screen.getByRole("img");
-      expect(image).toHaveAttribute("src", "test-image.jpg");
+      expect(image).toHaveAttribute("src", "/test-image.jpg");
       expect(image).toHaveAttribute("alt", "Test image");
     });
 

@@ -35,7 +35,7 @@ const mockMessages: Message[] = [
   {
     id: "3", 
     type: "image",
-    imageUrl: "test-image.jpg",
+    imageUrl: "/test-image.jpg",
     alt: "Test image",
     sender: mockCurrentUser,
     timestamp: new Date("2024-01-01T10:10:00Z"),

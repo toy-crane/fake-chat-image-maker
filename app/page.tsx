@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
-import { KakaoTalkChat, MessageForm, ProfileForm } from "@/features/chat/components";
+import { KakaoTalkChat, InstagramDMChat, MessageForm, ProfileForm } from "@/features/chat/components";
 import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
+import { ChatModeProvider, useChatModeContext } from "@/contexts/ChatModeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -57,6 +58,7 @@ function ChatInterface() {
     updateUsers,
     clearMessages,
   } = useChatContext();
+  const { chatMode, setChatMode } = useChatModeContext();
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -103,6 +105,25 @@ function ChatInterface() {
               Create realistic chat conversations with custom profiles and
               messages
             </p>
+            
+            {/* Chat Mode Switcher */}
+            <div className="flex justify-center gap-2 mt-8 mb-6">
+              <Button
+                variant={chatMode === "kakaotalk" ? "default" : "outline"}
+                onClick={() => setChatMode("kakaotalk")}
+                className="min-w-32"
+              >
+                KakaoTalk
+              </Button>
+              <Button
+                variant={chatMode === "instagram" ? "default" : "outline"}
+                onClick={() => setChatMode("instagram")}
+                className="min-w-32"
+              >
+                Instagram DM
+              </Button>
+            </div>
+            
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 max-w-3xl mx-auto">
               <p className="text-amber-800 text-sm font-medium">
                 ⚠️ For entertainment purposes only. <br />
@@ -172,10 +193,17 @@ function ChatInterface() {
                 className="sticky top-8"
                 ref={chatRef}
               >
-                <KakaoTalkChat
-                  messages={messages}
-                  chatTitle={otherUser?.name || ""}
-                />
+                {chatMode === "kakaotalk" ? (
+                  <KakaoTalkChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                ) : (
+                  <InstagramDMChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -187,8 +215,10 @@ function ChatInterface() {
 
 export default function Home() {
   return (
-    <ChatProvider initialMessages={[]}>
-      <ChatInterface />
-    </ChatProvider>
+    <ChatModeProvider>
+      <ChatProvider initialMessages={[]}>
+        <ChatInterface />
+      </ChatProvider>
+    </ChatModeProvider>
   );
 }
