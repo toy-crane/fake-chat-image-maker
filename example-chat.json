@@ -1,63 +1,62 @@
 [
   {
-    "type": "text",
-    "content": "Hey! How was your day?",
-    "isUserMessage": false,
-    "time": "14:30"
-  },
-  {
-    "type": "text", 
-    "content": "Pretty good! Just finished work. How about you?",
+    "content": "Hey! Are you free to chat for a bit?",
     "isUserMessage": true,
-    "time": "14:32"
+    "time": "16:12",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "Same here! Want to grab dinner tonight?",
+    "content": "Hey! Yeah, I’ve got a few minutes. What’s up?",
     "isUserMessage": false,
-    "time": "14:33"
+    "time": "16:13",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "Sounds great! Where should we go?",
+    "content": "Just needed a break from work. It’s been a hectic day.",
     "isUserMessage": true,
-    "time": "14:35"
+    "time": "16:13",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "How about that new Korean BBQ place?",
+    "content": "Ugh, I feel you. Anything specific stressing you out?",
     "isUserMessage": false,
-    "time": "14:36"
+    "time": "16:14",
+    "type": "text"
   },
   {
-    "type": "image",
-    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
-    "imageAlt": "Korean BBQ restaurant photo",
-    "isUserMessage": false,
-    "time": "14:37"
-  },
-  {
-    "type": "text",
-    "content": "Perfect! What time?",
+    "content": "Too many meetings and not enough time to actually get stuff done.",
     "isUserMessage": true,
-    "time": "14:38"
+    "time": "16:15",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "How about 7 PM?",
+    "content": "Classic. Meetings about the work instead of doing the work 😅",
     "isUserMessage": false,
-    "time": "14:39"
+    "time": "16:15",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "See you there! 👍",
+    "content": "Exactly! Anyway, how’s your week going?",
     "isUserMessage": true,
-    "time": "14:40"
+    "time": "16:16",
+    "type": "text"
   },
   {
-    "type": "text",
-    "content": "Can't wait! It's going to be delicious 🍖",
+    "content": "Not too bad, actually. Just finished a big project yesterday.",
     "isUserMessage": false,
-    "time": "14:41"
+    "time": "16:17",
+    "type": "text"
+  },
+  {
+    "content": "Nice! Must feel good to have that off your plate.",
+    "isUserMessage": true,
+    "time": "16:17",
+    "type": "text"
+  },
+  {
+    "content": "Totally. Thinking of taking Friday off if I can swing it.",
+    "isUserMessage": false,
+    "time": "16:18",
+    "type": "text"
   }
 ]

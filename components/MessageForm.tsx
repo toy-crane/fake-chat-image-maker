@@ -70,26 +70,26 @@ const AI_PROMPT_TEXT = `Generate a JSON array of realistic chat messages using t
   {
     "content": "Hey! How's your day going?",
     "isUserMessage": true,
-    "timestamp": "14:30",
-    "hasImage": false
+    "time": "14:30",
+    "type": "text"
   },
   {
     "content": "Pretty good! Just finished lunch",
     "isUserMessage": false,  
-    "timestamp": "14:32",
-    "hasImage": false
+    "time": "14:32",
+    "type": "text"
   },
   {
-    "content": "Check out this cool photo I took!",
+    "content": "That sounds great! What did you have?",
     "isUserMessage": true,
-    "timestamp": "14:35",
-    "hasImage": true,
-    "imageUrl": "data:image/jpeg;base64,/9j/4AAQ..."
+    "time": "14:33",
+    "type": "text"
   }
 ]
 </example>
 
-Include natural conversation flow, mix text/image messages, alternate speakers with isUserMessage true/false, and use HH:MM timestamps.`;
+Create natural conversation flow with only text messages, alternate speakers with isUserMessage true/false, and use HH:MM time format.`;
+
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
   onAddBulkMessages?: (data: BulkImportData) => void;
@@ -187,8 +187,8 @@ export function MessageForm({
     setImportError(null);
 
     // Check file type
-    if (!file.type.includes('json') && !file.name.endsWith('.json')) {
-      setImportError('Please select a valid JSON file.');
+    if (!file.type.includes("json") && !file.name.endsWith(".json")) {
+      setImportError("Please select a valid JSON file.");
       return;
     }
 
@@ -249,12 +249,12 @@ export function MessageForm({
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const jsonFile = files.find(file => 
-      file.type.includes('json') || file.name.endsWith('.json')
+    const jsonFile = files.find(
+      (file) => file.type.includes("json") || file.name.endsWith(".json")
     );
 
     if (!jsonFile) {
-      setImportError('Please drop a valid JSON file.');
+      setImportError("Please drop a valid JSON file.");
       return;
     }
 
@@ -271,7 +271,7 @@ export function MessageForm({
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -373,11 +373,11 @@ export function MessageForm({
                     {/* File Upload - Moved to top */}
                     <div className="space-y-3">
                       <h4 className="font-medium">Upload JSON File</h4>
-                      <div 
+                      <div
                         className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
-                          isDragOver 
-                            ? 'border-primary bg-primary/5' 
-                            : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                          isDragOver
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/50 hover:bg-muted/50"
                         }`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
@@ -393,11 +393,17 @@ export function MessageForm({
                           id="json-upload"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <Upload className={`w-8 h-8 transition-colors ${
-                            isDragOver ? 'text-primary' : 'text-muted-foreground'
-                          }`} />
+                          <Upload
+                            className={`w-8 h-8 transition-colors ${
+                              isDragOver
+                                ? "text-primary"
+                                : "text-muted-foreground"
+                            }`}
+                          />
                           <span className="text-sm font-medium">
-                            {isDragOver ? 'Drop JSON file here' : 'Choose or drag JSON file'}
+                            {isDragOver
+                              ? "Drop JSON file here"
+                              : "Choose or drag JSON file"}
                           </span>
                           <span className="text-xs text-muted-foreground">
                             .json files only
@@ -421,13 +427,20 @@ export function MessageForm({
                     )}
 
                     {/* Accordion for JSON Format and AI Prompt */}
-                    <Accordion type="single" collapsible className="w-full">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="w-full"
+                    >
                       <AccordionItem value="json-format">
-                        <AccordionTrigger>JSON Format Documentation</AccordionTrigger>
+                        <AccordionTrigger>
+                          JSON Format Documentation
+                        </AccordionTrigger>
                         <AccordionContent>
                           <div className="bg-muted p-4 rounded-lg">
                             <p className="text-sm text-muted-foreground mb-2">
-                              Array of message objects with the following structure:
+                              Array of message objects with the following
+                              structure:
                             </p>
                             <pre className="text-xs overflow-x-auto">
                               {JSON_FORMAT_EXAMPLE}
@@ -466,37 +479,9 @@ export function MessageForm({
                               </Button>
                             </div>
                             <div className="bg-white p-3 rounded border text-xs font-mono">
-                              <p className="mb-3">Generate a JSON array of realistic chat messages using this format:</p>
-                              
-                              <div className="bg-gray-50 p-3 rounded mb-3 overflow-x-auto">
-                                <pre className="whitespace-pre-wrap text-xs">
-{`<example>
-[
-  {
-    "content": "Hey! How's your day going?",
-    "isUserMessage": true,
-    "timestamp": "14:30",
-    "hasImage": false
-  },
-  {
-    "content": "Pretty good! Just finished lunch",
-    "isUserMessage": false,  
-    "timestamp": "14:32",
-    "hasImage": false
-  },
-  {
-    "content": "Check out this cool photo I took!",
-    "isUserMessage": true,
-    "timestamp": "14:35",
-    "hasImage": true,
-    "imageUrl": "data:image/jpeg;base64,/9j/4AAQ..."
-  }
-]
-</example>`}
-                                </pre>
-                              </div>
-                              
-                              <p className="text-xs">Include natural conversation flow, mix text/image messages, alternate speakers with isUserMessage true/false, and use HH:MM timestamps.</p>
+                              <pre className="whitespace-pre-wrap">
+                                {AI_PROMPT_TEXT}
+                              </pre>
                             </div>
                           </div>
                         </AccordionContent>
