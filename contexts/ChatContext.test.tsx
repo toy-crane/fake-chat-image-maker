@@ -1,7 +1,7 @@
 import { render, screen, act } from "@testing-library/react";
 import { describe, expect, it } from "bun:test";
 import { ChatProvider, useChatContext } from "./ChatContext";
-import { User, Message } from "@/components/kakao/types";
+import { User, Message } from "@/features/chat/components/types";
 
 // Mock users for testing
 const mockCurrentUser: User = {

@@ -90,6 +90,24 @@ const AI_PROMPT_TEXT = `Generate a JSON array of realistic chat messages using t
 
 Create natural conversation flow with only text messages, alternate speakers with isUserMessage true/false, and use HH:MM time format.`;
 
+const DEFAULT_FORM_VALUES = {
+  content: "",
+  isUserMessage: true,
+  time: "",
+  type: "text" as const,
+  imageUrl: "",
+  imageAlt: "",
+};
+
+const getResetFormValues = (isUserMessage: boolean, timeValue: string) => ({
+  content: "",
+  isUserMessage,
+  time: timeValue,
+  type: "text" as const,
+  imageUrl: "",
+  imageAlt: "",
+});
+
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
   onAddBulkMessages?: (data: BulkImportData) => void;
@@ -135,12 +153,8 @@ export function MessageForm({
   } = useForm<MessageFormData>({
     resolver: zodResolver(messageFormSchema),
     defaultValues: {
-      content: "",
-      isUserMessage: true,
+      ...DEFAULT_FORM_VALUES,
       time: timeValue,
-      type: "text",
-      imageUrl: "",
-      imageAlt: "",
     },
   });
 
@@ -283,14 +297,7 @@ export function MessageForm({
     };
 
     onAddMessage(formData);
-    reset({
-      content: "",
-      isUserMessage,
-      time: timeValue,
-      type: "text",
-      imageUrl: "",
-      imageAlt: "",
-    });
+    reset(getResetFormValues(isUserMessage, timeValue));
     setMessageType("text");
     setSelectedImage(null);
     setTimeValue(getCurrentTime());

@@ -3,10 +3,8 @@
 import { useRef } from "react";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
-import { KakaoTalkChat } from "../components/kakao";
-import { MessageForm } from "../components/MessageForm";
-import { ProfileForm } from "../components/ProfileForm";
-import { ChatProvider, useChatContext } from "@/lib/contexts/ChatContext";
+import { KakaoTalkChat, MessageForm, ProfileForm } from "@/features/chat/components";
+import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,6 +37,16 @@ const structuredData = {
   ],
 };
 
+const HTML2CANVAS_CONFIG = {
+  backgroundColor: "#ffffff",
+  scale: 4,
+  useCORS: true,
+  allowTaint: true,
+  width: 375,
+  height: 844,
+  logging: false,
+};
+
 function ChatInterface() {
   const {
     messages,
@@ -57,13 +65,7 @@ function ChatInterface() {
 
     try {
       const canvas = await html2canvas(chatRef.current, {
-        backgroundColor: "#ffffff",
-        scale: 4, // Increased from 2 to 4 for higher resolution
-        useCORS: true,
-        allowTaint: true,
-        width: 375,
-        height: 844,
-        logging: false,
+        ...HTML2CANVAS_CONFIG,
         onclone: (clonedDoc) => {
           // Force load high-resolution images in the cloned document
           const images = clonedDoc.getElementsByTagName("img");
