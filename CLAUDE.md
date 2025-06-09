@@ -48,9 +48,16 @@ Project uses Bun test with React Testing Library. Test files use `.test.tsx` ext
 - `testing-library.ts` - Matchers and cleanup
 - `bunfig.toml` - Test preloading
 
+**Linting**: ESLint is configured to include test files with stricter rules:
+- `@typescript-eslint/no-explicit-any: error` - Prohibits `any` type usage in tests
+- `@typescript-eslint/no-unused-vars: error` - Ensures no unused variables in tests
+- Test files (`.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`) are linted with the main codebase
+
 ### UI Components
 
 Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elements, check if a Shadcn component exists first. Custom components are in `components/kakao/` for KakaoTalk-specific UI.
+
+**Images**: Always use Next.js `<Image />` component instead of HTML `<img>` tags for better performance, automatic optimization, and LCP improvements.
 
 ### Styling
 
