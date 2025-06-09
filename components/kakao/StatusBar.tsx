@@ -1,12 +1,11 @@
-import { Calendar, Signal, Wifi, Battery } from 'lucide-react';
-import { StatusBarProps } from './types';
+import { Signal, Wifi, Battery } from "lucide-react";
+import { StatusBarProps } from "./types";
 
 export function StatusBar({ time }: StatusBarProps) {
   return (
     <div className="bg-white px-4 py-1.5 flex items-center justify-between text-black text-sm font-medium">
       <div className="flex items-center gap-1">
         <span>{time}</span>
-        <Calendar className="w-3 h-3 ml-1" />
       </div>
       <div className="flex items-center gap-1">
         <Signal className="w-3 h-3" />

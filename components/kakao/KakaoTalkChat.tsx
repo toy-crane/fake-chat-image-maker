@@ -48,7 +48,10 @@ export function KakaoTalkChat({
     }
 
     return (
-      <div key={message.id} className={addExtraMargin ? "mt-3" : ""}>
+      <div
+        key={message.id}
+        className={addExtraMargin ? "mt-3" : ""}
+      >
         <ChatMessage
           message={message}
           showSenderInfo={showSenderInfo}
@@ -62,21 +65,13 @@ export function KakaoTalkChat({
     <div
       className={`w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
     >
-      {/* Status Bar */}
       <StatusBar time="4:24" />
-
-      {/* Chat Header */}
       <ChatHeader title={chatTitle} />
 
-      {/* Messages Area */}
       <div className="flex-1 bg-blue-100 p-3 overflow-y-auto">
         {messages.map((message, index) => renderMessage(message, index))}
       </div>
-
-      {/* Input Area */}
       <ChatInput />
-
-      {/* Home Indicator */}
       <div className="bg-white pb-2 flex justify-center">
         <div className="w-32 h-1 bg-black rounded-full"></div>
       </div>

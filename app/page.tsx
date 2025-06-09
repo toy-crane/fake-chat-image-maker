@@ -29,18 +29,20 @@ function ChatInterface() {
 
     try {
       const canvas = await html2canvas(chatRef.current, {
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         scale: 2,
         useCORS: true,
         allowTaint: true,
+        width: 375,
+        height: 844,
       });
 
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.download = `chat-${new Date().toISOString().slice(0, 10)}.png`;
       link.href = canvas.toDataURL();
       link.click();
     } catch (error) {
-      console.error('Error downloading chat image:', error);
+      console.error("Error downloading chat image:", error);
     }
   };
 
@@ -113,7 +115,10 @@ function ChatInterface() {
 
           {/* Chat Preview */}
           <div className="xl:col-span-2 flex justify-center xl:justify-start">
-            <div className="sticky top-8" ref={chatRef}>
+            <div
+              className="sticky top-8"
+              ref={chatRef}
+            >
               <KakaoTalkChat
                 messages={messages}
                 chatTitle={otherUser?.name || ""}
