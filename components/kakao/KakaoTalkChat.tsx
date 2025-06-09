@@ -66,7 +66,7 @@ export function KakaoTalkChat({
 
   return (
     <div
-      className={`w-full min-w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
+      className={`w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
     >
       {/* Status Bar */}
       <StatusBar time="4:24" />
