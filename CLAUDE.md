@@ -62,3 +62,17 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 
 - Use `<Input type="time" />` for time inputs (not custom Select components)
 - Always use React Hook Form + Zod for form handling and validation
+
+### JSON Import Feature
+
+**Bulk Message Import**: Users can import multiple messages at once via JSON file upload.
+
+- **Location**: "Import JSON" button in MessageForm header (only visible when `onAddBulkMessages` prop is provided)
+- **Format**: Array of `MessageFormData` objects with validation via `bulkImportSchema`
+- **Validation**: Comprehensive error handling with specific feedback for malformed JSON or validation errors
+- **AI Integration**: Provides AI-powered prompt template to help users generate correct JSON format
+- **Implementation**: 
+  - `bulkImportSchema` in `lib/schemas/message.ts` for validation
+  - `addBulkMessages()` method in `ChatContext` for bulk insertion
+  - Shadcn Dialog component for user interface
+  - File upload with `.json` restriction and drag-drop styling

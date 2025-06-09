@@ -2,13 +2,14 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Message, User } from "@/components/kakao/types";
-import { MessageFormData } from "@/lib/schemas/message";
+import { MessageFormData, BulkImportData } from "@/lib/schemas/message";
 
 interface ChatContextType {
   messages: Message[];
   currentUser?: User;
   otherUser?: User;
   addMessage: (data: MessageFormData) => void;
+  addBulkMessages: (data: BulkImportData) => void;
   editMessage: (id: string, data: Partial<MessageFormData>) => void;
   deleteMessage: (id: string) => void;
   clearMessages: () => void;
@@ -64,6 +65,45 @@ export function ChatProvider({
           };
 
     setMessages((prev) => [...prev, newMessage]);
+  };
+
+  const addBulkMessages = (bulkData: BulkImportData) => {
+    if (!currentUser || !otherUser) {
+      console.error("Current user or other user is not set");
+      return;
+    }
+
+    if (bulkData.length === 0) {
+      return; // No messages to add
+    }
+
+    const newMessages: Message[] = bulkData.map((data, index) => {
+      // Create Date from hour and minute
+      const timestampDate = new Date();
+      timestampDate.setHours(data.hour, data.minute, 0, 0);
+
+      const baseMessage = {
+        id: (Date.now() + index).toString(), // Ensure unique IDs
+        sender: data.isUserMessage ? currentUser : otherUser,
+        timestamp: timestampDate,
+        isUser: data.isUserMessage,
+      };
+
+      return data.type === "text"
+        ? {
+            ...baseMessage,
+            type: "text",
+            content: data.content || "",
+          }
+        : {
+            ...baseMessage,
+            type: "image",
+            imageUrl: data.imageUrl!,
+            alt: data.imageAlt || "Uploaded image",
+          };
+    });
+
+    setMessages((prev) => [...prev, ...newMessages]);
   };
 
   const editMessage = (id: string, data: Partial<MessageFormData>) => {
@@ -146,6 +186,7 @@ export function ChatProvider({
         currentUser,
         otherUser,
         addMessage,
+        addBulkMessages,
         editMessage,
         deleteMessage,
         clearMessages,

@@ -1,10 +1,9 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, expect, it, jest, beforeEach } from "bun:test";
 import { MessageForm } from "./MessageForm";
-import { MessageFormData } from "@/lib/schemas/message";
 
 // Mock file for testing
-const createMockJsonFile = (content: any) => {
+const createMockJsonFile = (content: unknown) => {
   const jsonString = JSON.stringify(content);
   const blob = new Blob([jsonString], { type: "application/json" });
   return new File([blob], "messages.json", { type: "application/json" });

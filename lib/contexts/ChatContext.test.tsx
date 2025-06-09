@@ -53,8 +53,8 @@ function TestComponent() {
   return (
     <div>
       <div data-testid="messages-count">{messages.length}</div>
-      <div data-testid="current-user">{currentUser.name}</div>
-      <div data-testid="other-user">{otherUser.name}</div>
+      <div data-testid="current-user">{currentUser?.name}</div>
+      <div data-testid="other-user">{otherUser?.name}</div>
       <button
         data-testid="add-text-message"
         onClick={() =>
@@ -126,7 +126,7 @@ function TestComponent() {
 // Component to test hook error handling
 function TestComponentWithoutProvider() {
   const context = useChatContext();
-  return <div>{context.currentUser.name}</div>;
+  return <div>{context.currentUser?.name}</div>;
 }
 
 describe("ChatContext", () => {
@@ -577,11 +577,11 @@ describe("ChatContext", () => {
       });
 
       expect(capturedMessages[0].type).toBe("text");
-      expect((capturedMessages[0] as any).content).toBe("Message A");
+      expect((capturedMessages[0] as { content: string }).content).toBe("Message A");
       expect(capturedMessages[1].type).toBe("text");
-      expect((capturedMessages[1] as any).content).toBe("Message B");
+      expect((capturedMessages[1] as { content: string }).content).toBe("Message B");
       expect(capturedMessages[2].type).toBe("text");
-      expect((capturedMessages[2] as any).content).toBe("Message C");
+      expect((capturedMessages[2] as { content: string }).content).toBe("Message C");
     });
 
     it("assigns correct timestamps and senders for bulk messages", () => {
@@ -743,9 +743,9 @@ describe("ChatContext", () => {
       });
 
       expect(capturedMessages).toHaveLength(3);
-      expect((capturedMessages[0] as any).content).toBe("Single message");
-      expect((capturedMessages[1] as any).content).toBe("Bulk message 1");
-      expect((capturedMessages[2] as any).content).toBe("Bulk message 2");
+      expect((capturedMessages[0] as { content: string }).content).toBe("Single message");
+      expect((capturedMessages[1] as { content: string }).content).toBe("Bulk message 1");
+      expect((capturedMessages[2] as { content: string }).content).toBe("Bulk message 2");
     });
   });
 

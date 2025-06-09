@@ -32,19 +32,21 @@ export function ImageMessage({ message }: ImageMessageProps) {
     <div className="flex items-start gap-2 mb-4">
       <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
         {sender.avatar ? (
-          <img 
+          <Image 
             src={sender.avatar}
-            alt={sender.name}
+            alt={sender.name || "User avatar"}
+            width={40}
+            height={40}
             className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500 text-xs">{sender.name[0]}</span>
+            <span className="text-gray-500 text-xs">{sender.name?.[0] || "?"}</span>
           </div>
         )}
       </div>
       <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-700 mb-1">{sender.name}</span>
+        <span className="text-sm font-medium text-gray-700 mb-1">{sender.name || "Unknown"}</span>
         <div className="flex items-end gap-2">
           <div className="max-w-xs">
             <Image

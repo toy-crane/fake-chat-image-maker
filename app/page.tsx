@@ -15,6 +15,7 @@ function ChatInterface() {
   const {
     messages,
     addMessage,
+    addBulkMessages,
     currentUser,
     otherUser,
     updateUsers,
@@ -98,6 +99,7 @@ function ChatInterface() {
                   >
                     <MessageForm
                       onAddMessage={addMessage}
+                      onAddBulkMessages={addBulkMessages}
                       currentUserName={currentUser?.name}
                       otherUserName={otherUser?.name}
                       onClearMessages={clearMessages}

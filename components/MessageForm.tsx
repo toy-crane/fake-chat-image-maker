@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { messageFormSchema, MessageFormData } from "@/lib/schemas/message";
+import { messageFormSchema, MessageFormData, bulkImportSchema, BulkImportData } from "@/lib/schemas/message";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -10,6 +10,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Send,
   User,
@@ -18,12 +27,15 @@ import {
   X,
   UserPlus,
   RotateCcw,
+  Upload,
+  FileText,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
+  onAddBulkMessages?: (data: BulkImportData) => void;
   currentUserName?: string;
   otherUserName?: string;
   onClearMessages?: () => void;
@@ -32,6 +44,7 @@ interface MessageFormProps {
 
 export function MessageForm({
   onAddMessage,
+  onAddBulkMessages,
   currentUserName,
   otherUserName,
   onClearMessages,
@@ -40,6 +53,8 @@ export function MessageForm({
   const [isUserMessage, setIsUserMessage] = useState(true);
   const [messageType, setMessageType] = useState<"text" | "image">("text");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -113,6 +128,38 @@ export function MessageForm({
     setValue("imageAlt", "");
   };
 
+  const handleJsonFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImportError(null);
+
+    try {
+      const text = await file.text();
+      const jsonData = JSON.parse(text);
+      
+      // Validate the JSON structure
+      const validatedData = bulkImportSchema.parse(jsonData);
+      
+      // Call the bulk import function if available
+      if (onAddBulkMessages) {
+        onAddBulkMessages(validatedData);
+        setShowImportDialog(false);
+      }
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        setImportError("Invalid JSON format. Please check your file and try again.");
+      } else if (error instanceof Error) {
+        setImportError(`Validation errors: ${error.message}`);
+      } else {
+        setImportError("An unexpected error occurred while processing the file.");
+      }
+    }
+
+    // Reset the file input
+    event.target.value = "";
+  };
+
   const onSubmit = (data: MessageFormData) => {
     const formData = {
       ...data,
@@ -183,7 +230,113 @@ export function MessageForm({
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Add Message</span>
-          <div className="flex items-center gap-4 flex-col">
+          <div className="flex items-center gap-2">
+            {onAddBulkMessages && (
+              <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Import JSON
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Import Messages from JSON</DialogTitle>
+                    <DialogDescription>
+                      Upload a JSON file containing an array of messages to bulk import them.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    {/* JSON Format Documentation */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Required JSON Format</h4>
+                      <div className="bg-muted p-4 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-2">
+                          Array of message objects with the following structure:
+                        </p>
+                        <pre className="text-xs overflow-x-auto">
+{`[
+  {
+    "type": "text",
+    "content": "Hello world!",
+    "isUserMessage": true,
+    "hour": 14,
+    "minute": 30
+  },
+  {
+    "type": "image", 
+    "imageUrl": "data:image/png;base64,abc123...",
+    "imageAlt": "Photo description",
+    "isUserMessage": false,
+    "hour": 14,
+    "minute": 35
+  }
+]`}
+                        </pre>
+                      </div>
+                    </div>
+
+                    {/* AI Prompt */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium">AI-Powered Generation</h4>
+                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <p className="text-sm text-blue-700 mb-2">
+                          <FileText className="w-4 h-4 inline mr-1" />
+                          Copy this prompt to your AI assistant:
+                        </p>
+                        <div className="bg-white p-3 rounded border text-xs font-mono">
+                          Generate a JSON array of realistic chat messages using this format. Include a mix of text and image messages with natural conversation flow. Use &quot;isUserMessage&quot;: true/false to alternate between speakers. Set realistic hour/minute timestamps. For image messages, use placeholder data URLs or descriptions.
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* File Upload */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Upload JSON File</h4>
+                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                        <input
+                          type="file"
+                          accept=".json,application/json"
+                          onChange={handleJsonFileUpload}
+                          className="hidden"
+                          id="json-upload"
+                        />
+                        <label
+                          htmlFor="json-upload"
+                          className="cursor-pointer flex flex-col items-center gap-2"
+                        >
+                          <Upload className="w-8 h-8 text-muted-foreground" />
+                          <span className="text-sm font-medium">Choose JSON file</span>
+                          <span className="text-xs text-muted-foreground">
+                            .json files only
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Error Display */}
+                    {importError && (
+                      <Alert variant="destructive">
+                        <X className="h-4 w-4" />
+                        <div>
+                          <strong>Import Failed</strong>
+                          <p className="text-sm mt-1">{importError}</p>
+                          <p className="text-xs mt-2 text-muted-foreground">
+                            Please check the JSON format and try again.
+                          </p>
+                        </div>
+                      </Alert>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
             {onClearMessages && (
               <Button
                 type="button"
