@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,9 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     default: "Fake Chat Image Maker - Create Realistic KakaoTalk Screenshots",
-    template: "%s | Fake Chat Image Maker"
+    template: "%s | Fake Chat Image Maker",
   },
-  description: "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups. Export high-quality PNG images instantly.",
+  description:
+    "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups. Export high-quality PNG images instantly.",
   keywords: [
     "fake chat",
     "chat generator",
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
     "chat simulator",
     "mockup",
     "entertainment",
-    "social media"
+    "social media",
   ],
   authors: [{ name: "Fake Chat Image Maker" }],
   creator: "Fake Chat Image Maker",
@@ -39,9 +42,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   openGraph: {
@@ -50,7 +53,8 @@ export const metadata: Metadata = {
     url: "https://fake-chat-maker.vercel.app",
     siteName: "Fake Chat Image Maker",
     title: "Fake Chat Image Maker - Create Realistic KakaoTalk Screenshots",
-    description: "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
+    description:
+      "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
     images: [
       {
         url: "/og-image.png",
@@ -65,14 +69,15 @@ export const metadata: Metadata = {
     site: "@fakechatmaker",
     creator: "@fakechatmaker",
     title: "Fake Chat Image Maker - Create Realistic KakaoTalk Screenshots",
-    description: "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
+    description:
+      "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
     images: [
       {
         url: "/twitter-image.png",
         width: 1200,
         height: 675,
         alt: "Fake Chat Image Maker Twitter Preview",
-      }
+      },
     ],
   },
   viewport: {
@@ -100,6 +105,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Analytics />
         {children}
       </body>
     </html>
