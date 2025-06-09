@@ -17,9 +17,7 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
-  experimental: {
-    serverComponentsExternalPackages: ["@happy-dom/global-registrator"],
-  },
+  serverExternalPackages: ["@happy-dom/global-registrator"],
 };
 
 export default nextConfig;
