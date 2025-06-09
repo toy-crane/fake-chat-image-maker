@@ -30,11 +30,22 @@ function ChatInterface() {
     try {
       const canvas = await html2canvas(chatRef.current, {
         backgroundColor: "#ffffff",
-        scale: 2,
+        scale: 4, // Increased from 2 to 4 for higher resolution
         useCORS: true,
         allowTaint: true,
         width: 375,
         height: 844,
+        logging: false,
+        onclone: (clonedDoc) => {
+          // Force load high-resolution images in the cloned document
+          const images = clonedDoc.getElementsByTagName("img");
+          Array.from(images).forEach((img) => {
+            // Remove srcset to prevent low-res selection
+            img.removeAttribute("srcset");
+            // Ensure crossorigin is set for external images
+            img.setAttribute("crossorigin", "anonymous");
+          });
+        },
       });
 
       const link = document.createElement("a");
