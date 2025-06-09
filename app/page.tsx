@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
-import { KakaoTalkChat, MessageForm, ProfileForm } from "@/features/chat/components";
+import { KakaoTalkChat, DiscordChat, MessageForm, ProfileForm } from "@/features/chat/components";
 import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -37,15 +38,15 @@ const structuredData = {
   ],
 };
 
-const HTML2CANVAS_CONFIG = {
-  backgroundColor: "#ffffff",
+const getHTML2CanvasConfig = (chatType: "kakao" | "discord") => ({
+  backgroundColor: chatType === "discord" ? "#36393f" : "#ffffff",
   scale: 4,
   useCORS: true,
   allowTaint: true,
-  width: 375,
-  height: 844,
+  width: chatType === "discord" ? 400 : 375,
+  height: chatType === "discord" ? 600 : 844,
   logging: false,
-};
+});
 
 function ChatInterface() {
   const {
@@ -59,13 +60,14 @@ function ChatInterface() {
   } = useChatContext();
 
   const chatRef = useRef<HTMLDivElement>(null);
+  const [chatType, setChatType] = useState<"kakao" | "discord">("kakao");
 
   const downloadChatImage = async () => {
     if (!chatRef.current) return;
 
     try {
       const canvas = await html2canvas(chatRef.current, {
-        ...HTML2CANVAS_CONFIG,
+        ...getHTML2CanvasConfig(chatType),
         onclone: (clonedDoc) => {
           // Force load high-resolution images in the cloned document
           const images = clonedDoc.getElementsByTagName("img");
@@ -131,11 +133,40 @@ function ChatInterface() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="profiles">
-                    <TabsList className="grid w-full grid-cols-2">
+                  <Tabs defaultValue="chattype">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="chattype">Chat Type</TabsTrigger>
                       <TabsTrigger value="profiles">Profiles</TabsTrigger>
                       <TabsTrigger value="messages">Messages</TabsTrigger>
                     </TabsList>
+
+                    <TabsContent
+                      value="chattype"
+                      className="mt-6"
+                    >
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="chat-type" className="text-sm font-medium">
+                            Select Chat Style
+                          </label>
+                          <Select value={chatType} onValueChange={(value: "kakao" | "discord") => setChatType(value)}>
+                            <SelectTrigger className="mt-2">
+                              <SelectValue placeholder="Choose chat style" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="kakao">KakaoTalk</SelectItem>
+                              <SelectItem value="discord">Discord</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {chatType === "kakao" 
+                            ? "Create KakaoTalk-style chat screenshots with yellow message bubbles and mobile UI."
+                            : "Create Discord-style chat screenshots with dark theme and server/channel layout."
+                          }
+                        </div>
+                      </div>
+                    </TabsContent>
 
                     <TabsContent
                       value="profiles"
@@ -172,10 +203,18 @@ function ChatInterface() {
                 className="sticky top-8"
                 ref={chatRef}
               >
-                <KakaoTalkChat
-                  messages={messages}
-                  chatTitle={otherUser?.name || ""}
-                />
+                {chatType === "kakao" ? (
+                  <KakaoTalkChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                ) : (
+                  <DiscordChat
+                    messages={messages}
+                    channelName="general"
+                    serverName={otherUser?.name || "Test Server"}
+                  />
+                )}
               </div>
             </div>
           </div>
