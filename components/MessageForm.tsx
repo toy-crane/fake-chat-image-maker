@@ -42,7 +42,7 @@ import {
   Upload,
   FileText,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 const JSON_FORMAT_EXAMPLE = `[
@@ -82,6 +82,8 @@ export function MessageForm({
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -150,13 +152,14 @@ export function MessageForm({
     setValue("imageAlt", "");
   };
 
-  const handleJsonFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const processJsonFile = async (file: File) => {
     setImportError(null);
+
+    // Check file type
+    if (!file.type.includes('json') && !file.name.endsWith('.json')) {
+      setImportError('Please select a valid JSON file.');
+      return;
+    }
 
     try {
       const text = await file.text();
@@ -183,9 +186,52 @@ export function MessageForm({
         );
       }
     }
+  };
+
+  const handleJsonFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    await processJsonFile(file);
 
     // Reset the file input
     event.target.value = "";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    const jsonFile = files.find(file => 
+      file.type.includes('json') || file.name.endsWith('.json')
+    );
+
+    if (!jsonFile) {
+      setImportError('Please drop a valid JSON file.');
+      return;
+    }
+
+    await processJsonFile(jsonFile);
+  };
+
+  const handleDropZoneClick = () => {
+    fileInputRef.current?.click();
   };
 
   const onSubmit = (data: MessageFormData) => {
@@ -286,26 +332,36 @@ export function MessageForm({
                     {/* File Upload - Moved to top */}
                     <div className="space-y-3">
                       <h4 className="font-medium">Upload JSON File</h4>
-                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                      <div 
+                        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+                          isDragOver 
+                            ? 'border-primary bg-primary/5' 
+                            : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                        }`}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={handleDropZoneClick}
+                      >
                         <input
+                          ref={fileInputRef}
                           type="file"
                           accept=".json,application/json"
                           onChange={handleJsonFileUpload}
                           className="hidden"
                           id="json-upload"
                         />
-                        <label
-                          htmlFor="json-upload"
-                          className="cursor-pointer flex flex-col items-center gap-2"
-                        >
-                          <Upload className="w-8 h-8 text-muted-foreground" />
+                        <div className="flex flex-col items-center gap-2">
+                          <Upload className={`w-8 h-8 transition-colors ${
+                            isDragOver ? 'text-primary' : 'text-muted-foreground'
+                          }`} />
                           <span className="text-sm font-medium">
-                            Choose JSON file
+                            {isDragOver ? 'Drop JSON file here' : 'Choose or drag JSON file'}
                           </span>
                           <span className="text-xs text-muted-foreground">
                             .json files only
                           </span>
-                        </label>
+                        </div>
                       </div>
                     </div>
 
