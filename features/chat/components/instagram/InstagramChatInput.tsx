@@ -31,21 +31,21 @@ export function InstagramChatInput({
 
   return (
     <div
-      className="flex items-center px-4 py-3 bg-white border-t border-gray-200"
+      className="flex items-center px-4 py-3 bg-white border-t border-gray-100"
       data-testid="instagram-chat-input"
     >
       {/* Camera button */}
       <button
         onClick={onCamera}
-        className="p-2 hover:bg-gray-100 rounded-full transition-colors mr-2"
+        className="w-9 h-9 bg-[#0095F6] hover:bg-[#1877F2] rounded-full transition-colors mr-3 flex items-center justify-center"
         data-testid="camera-button"
       >
         <svg
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
           fill="none"
-          className="text-[#8B3DFF]"
+          className="text-white"
         >
           <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
           <path
@@ -66,7 +66,7 @@ export function InstagramChatInput({
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Message..."
-          className="w-full px-4 py-2 bg-gray-100 rounded-full border-none outline-none text-gray-900 placeholder-gray-500"
+          className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-full outline-none text-gray-900 placeholder-gray-500 text-[15px] focus:border-gray-300 focus:bg-white transition-colors"
         />
       </div>
 

@@ -65,7 +65,7 @@ export function InstagramDMChat({ onExportChat }: InstagramDMChatProps) {
         className="flex-1 overflow-y-auto bg-white"
         data-testid="instagram-message-list"
       >
-        <div className="py-4">
+        <div className="py-2">
           {messages.map((message, index) => {
             const previousMessage = messages[index - 1];
             const nextMessage = messages[index + 1];
@@ -73,7 +73,12 @@ export function InstagramDMChat({ onExportChat }: InstagramDMChatProps) {
             // In Instagram style, we show avatar for every message from others
             const showAvatar = !message.isUser;
             const showSender = !message.isUser && (!previousMessage || previousMessage.isUser || previousMessage.sender !== message.sender);
-            const showTimestamp = !nextMessage || nextMessage.sender !== message.sender || nextMessage.isUser !== message.isUser;
+            
+            // Show timestamp for last message or when sender changes
+            const showTimestamp = !nextMessage || 
+              nextMessage.sender !== message.sender || 
+              nextMessage.isUser !== message.isUser ||
+              index === messages.length - 1;
 
             const senderUser = message.isUser ? currentUser : otherUser;
 
