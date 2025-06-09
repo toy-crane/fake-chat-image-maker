@@ -72,7 +72,7 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 
 ### Code Quality
 
-- Extract magic numbers/strings to constants outside components to prevent recreation on renders
+- **Always extract static values outside components** (strings, objects, arrays, configs) to prevent recreation on renders
 
 ### JSON Import Feature
 

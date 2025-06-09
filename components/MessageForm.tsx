@@ -41,6 +41,8 @@ import {
   RotateCcw,
   Upload,
   FileText,
+  Copy,
+  Check,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -60,6 +62,34 @@ const JSON_FORMAT_EXAMPLE = `[
     "time": "14:35"
   }
 ]`;
+
+const AI_PROMPT_TEXT = `Generate a JSON array of realistic chat messages using this format:
+
+<example>
+[
+  {
+    "content": "Hey! How's your day going?",
+    "isUserMessage": true,
+    "timestamp": "14:30",
+    "hasImage": false
+  },
+  {
+    "content": "Pretty good! Just finished lunch",
+    "isUserMessage": false,  
+    "timestamp": "14:32",
+    "hasImage": false
+  },
+  {
+    "content": "Check out this cool photo I took!",
+    "isUserMessage": true,
+    "timestamp": "14:35",
+    "hasImage": true,
+    "imageUrl": "data:image/jpeg;base64,/9j/4AAQ..."
+  }
+]
+</example>
+
+Include natural conversation flow, mix text/image messages, alternate speakers with isUserMessage true/false, and use HH:MM timestamps.`;
 interface MessageFormProps {
   onAddMessage: (data: MessageFormData) => void;
   onAddBulkMessages?: (data: BulkImportData) => void;
@@ -83,6 +113,7 @@ export function MessageForm({
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getCurrentTime = () => {
@@ -232,6 +263,16 @@ export function MessageForm({
 
   const handleDropZoneClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleCopyPrompt = async () => {
+    try {
+      await navigator.clipboard.writeText(AI_PROMPT_TEXT);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
   };
 
   const onSubmit = (data: MessageFormData) => {
@@ -399,18 +440,63 @@ export function MessageForm({
                         <AccordionTrigger>AI Prompt Template</AccordionTrigger>
                         <AccordionContent>
                           <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                            <p className="text-sm text-blue-700 mb-2">
-                              <FileText className="w-4 h-4 inline mr-1" />
-                              Copy this prompt to your AI assistant:
-                            </p>
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-sm text-blue-700">
+                                <FileText className="w-4 h-4 inline mr-1" />
+                                Copy this prompt to your AI assistant:
+                              </p>
+                              <Button
+                                type="button"
+                                onClick={handleCopyPrompt}
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-3 text-xs"
+                              >
+                                {isCopied ? (
+                                  <>
+                                    <Check className="w-3 h-3 mr-1" />
+                                    Copied!
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3 h-3 mr-1" />
+                                    Copy
+                                  </>
+                                )}
+                              </Button>
+                            </div>
                             <div className="bg-white p-3 rounded border text-xs font-mono">
-                              Generate a JSON array of realistic chat messages using
-                              this format. Include a mix of text and image messages
-                              with natural conversation flow. Use
-                              &quot;isUserMessage&quot;: true/false to alternate
-                              between speakers. Set realistic time timestamps in
-                              HH:MM format. For image messages, use placeholder data
-                              URLs or descriptions.
+                              <p className="mb-3">Generate a JSON array of realistic chat messages using this format:</p>
+                              
+                              <div className="bg-gray-50 p-3 rounded mb-3 overflow-x-auto">
+                                <pre className="whitespace-pre-wrap text-xs">
+{`<example>
+[
+  {
+    "content": "Hey! How's your day going?",
+    "isUserMessage": true,
+    "timestamp": "14:30",
+    "hasImage": false
+  },
+  {
+    "content": "Pretty good! Just finished lunch",
+    "isUserMessage": false,  
+    "timestamp": "14:32",
+    "hasImage": false
+  },
+  {
+    "content": "Check out this cool photo I took!",
+    "isUserMessage": true,
+    "timestamp": "14:35",
+    "hasImage": true,
+    "imageUrl": "data:image/jpeg;base64,/9j/4AAQ..."
+  }
+]
+</example>`}
+                                </pre>
+                              </div>
+                              
+                              <p className="text-xs">Include natural conversation flow, mix text/image messages, alternate speakers with isUserMessage true/false, and use HH:MM timestamps.</p>
                             </div>
                           </div>
                         </AccordionContent>
