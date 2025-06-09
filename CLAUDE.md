@@ -49,9 +49,12 @@ Project uses Bun test with React Testing Library. Test files use `.test.tsx` ext
 - `bunfig.toml` - Test preloading
 
 **Linting**: ESLint is configured to include test files with stricter rules:
+
 - `@typescript-eslint/no-explicit-any: error` - Prohibits `any` type usage in tests
 - `@typescript-eslint/no-unused-vars: error` - Ensures no unused variables in tests
 - Test files (`.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`) are linted with the main codebase
+
+**Deployment Note**: Test files are excluded from production builds in `tsconfig.json` to prevent Vercel build failures with `bun:test` imports.
 
 ### UI Components
 
@@ -82,7 +85,7 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 - **Format**: Array of `MessageFormData` objects with validation via `bulkImportSchema`
 - **Validation**: Comprehensive error handling with specific feedback for malformed JSON or validation errors
 - **AI Integration**: Provides AI-powered prompt template to help users generate correct JSON format
-- **Implementation**: 
+- **Implementation**:
   - `bulkImportSchema` in `lib/schemas/message.ts` for validation
   - `addBulkMessages()` method in `ChatContext` for bulk insertion
   - Shadcn Dialog component for user interface
