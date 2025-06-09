@@ -22,3 +22,9 @@ export const messageFormSchema = z.object({
 });
 
 export type MessageFormData = z.infer<typeof messageFormSchema>;
+
+export const bulkImportSchema = z.array(messageFormSchema).min(1, {
+  message: 'At least one message is required',
+});
+
+export type BulkImportData = z.infer<typeof bulkImportSchema>;

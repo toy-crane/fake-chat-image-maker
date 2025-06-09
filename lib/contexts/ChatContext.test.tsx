@@ -466,6 +466,289 @@ describe("ChatContext", () => {
     });
   });
 
+  describe("addBulkMessages", () => {
+    it("adds multiple messages at once", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestBulkAdd() {
+        const { messages, addBulkMessages } = useChatContext();
+        capturedMessages = messages;
+
+        const bulkData = [
+          {
+            type: "text" as const,
+            content: "First message",
+            isUserMessage: true,
+            hour: 10,
+            minute: 0,
+          },
+          {
+            type: "image" as const,
+            imageUrl: "test-image.jpg",
+            imageAlt: "Test image",
+            isUserMessage: false,
+            hour: 10,
+            minute: 5,
+          },
+          {
+            type: "text" as const,
+            content: "Third message",
+            isUserMessage: true,
+            hour: 10,
+            minute: 10,
+          },
+        ];
+
+        return (
+          <button onClick={() => addBulkMessages(bulkData)}>
+            Add Bulk Messages
+          </button>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestBulkAdd />
+        </ChatProvider>
+      );
+
+      act(() => {
+        screen.getByRole("button").click();
+      });
+
+      expect(capturedMessages).toHaveLength(3);
+      expect(capturedMessages[0].type).toBe("text");
+      expect(capturedMessages[1].type).toBe("image");
+      expect(capturedMessages[2].type).toBe("text");
+    });
+
+    it("preserves message order from input array", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestBulkOrder() {
+        const { messages, addBulkMessages } = useChatContext();
+        capturedMessages = messages;
+
+        const bulkData = [
+          {
+            type: "text" as const,
+            content: "Message A",
+            isUserMessage: true,
+            hour: 10,
+            minute: 0,
+          },
+          {
+            type: "text" as const,
+            content: "Message B",
+            isUserMessage: false,
+            hour: 10,
+            minute: 5,
+          },
+          {
+            type: "text" as const,
+            content: "Message C",
+            isUserMessage: true,
+            hour: 10,
+            minute: 10,
+          },
+        ];
+
+        return (
+          <button onClick={() => addBulkMessages(bulkData)}>
+            Add Bulk Messages
+          </button>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestBulkOrder />
+        </ChatProvider>
+      );
+
+      act(() => {
+        screen.getByRole("button").click();
+      });
+
+      expect(capturedMessages[0].type).toBe("text");
+      expect((capturedMessages[0] as any).content).toBe("Message A");
+      expect(capturedMessages[1].type).toBe("text");
+      expect((capturedMessages[1] as any).content).toBe("Message B");
+      expect(capturedMessages[2].type).toBe("text");
+      expect((capturedMessages[2] as any).content).toBe("Message C");
+    });
+
+    it("assigns correct timestamps and senders for bulk messages", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestBulkTimestampsAndSenders() {
+        const { messages, addBulkMessages } = useChatContext();
+        capturedMessages = messages;
+
+        const bulkData = [
+          {
+            type: "text" as const,
+            content: "User message",
+            isUserMessage: true,
+            hour: 14,
+            minute: 30,
+          },
+          {
+            type: "text" as const,
+            content: "Other message",
+            isUserMessage: false,
+            hour: 15,
+            minute: 45,
+          },
+        ];
+
+        return (
+          <button onClick={() => addBulkMessages(bulkData)}>
+            Add Bulk Messages
+          </button>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestBulkTimestampsAndSenders />
+        </ChatProvider>
+      );
+
+      act(() => {
+        screen.getByRole("button").click();
+      });
+
+      // Check first message
+      expect(capturedMessages[0].timestamp.getHours()).toBe(14);
+      expect(capturedMessages[0].timestamp.getMinutes()).toBe(30);
+      expect(capturedMessages[0].sender).toEqual(mockCurrentUser);
+      expect(capturedMessages[0].isUser).toBe(true);
+
+      // Check second message
+      expect(capturedMessages[1].timestamp.getHours()).toBe(15);
+      expect(capturedMessages[1].timestamp.getMinutes()).toBe(45);
+      expect(capturedMessages[1].sender).toEqual(mockOtherUser);
+      expect(capturedMessages[1].isUser).toBe(false);
+    });
+
+    it("does nothing with empty array", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestEmptyBulk() {
+        const { messages, addBulkMessages } = useChatContext();
+        capturedMessages = messages;
+
+        return (
+          <button onClick={() => addBulkMessages([])}>
+            Add Empty Bulk
+          </button>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestEmptyBulk />
+        </ChatProvider>
+      );
+
+      act(() => {
+        screen.getByRole("button").click();
+      });
+
+      expect(capturedMessages).toHaveLength(0);
+    });
+
+    it("appends to existing messages", () => {
+      let capturedMessages: Message[] = [];
+
+      function TestAppendBulk() {
+        const { messages, addMessage, addBulkMessages } = useChatContext();
+        capturedMessages = messages;
+
+        const bulkData = [
+          {
+            type: "text" as const,
+            content: "Bulk message 1",
+            isUserMessage: true,
+            hour: 11,
+            minute: 0,
+          },
+          {
+            type: "text" as const,
+            content: "Bulk message 2",
+            isUserMessage: false,
+            hour: 11,
+            minute: 5,
+          },
+        ];
+
+        return (
+          <div>
+            <button
+              data-testid="add-single"
+              onClick={() =>
+                addMessage({
+                  type: "text",
+                  content: "Single message",
+                  isUserMessage: true,
+                  hour: 10,
+                  minute: 0,
+                })
+              }
+            >
+              Add Single
+            </button>
+            <button
+              data-testid="add-bulk"
+              onClick={() => addBulkMessages(bulkData)}
+            >
+              Add Bulk
+            </button>
+          </div>
+        );
+      }
+
+      render(
+        <ChatProvider
+          currentUser={mockCurrentUser}
+          otherUser={mockOtherUser}
+        >
+          <TestAppendBulk />
+        </ChatProvider>
+      );
+
+      // Add single message first
+      act(() => {
+        screen.getByTestId("add-single").click();
+      });
+
+      expect(capturedMessages).toHaveLength(1);
+
+      // Add bulk messages
+      act(() => {
+        screen.getByTestId("add-bulk").click();
+      });
+
+      expect(capturedMessages).toHaveLength(3);
+      expect((capturedMessages[0] as any).content).toBe("Single message");
+      expect((capturedMessages[1] as any).content).toBe("Bulk message 1");
+      expect((capturedMessages[2] as any).content).toBe("Bulk message 2");
+    });
+  });
+
   describe("updateUsers", () => {
     it("updates currentUser and otherUser correctly", () => {
       render(
