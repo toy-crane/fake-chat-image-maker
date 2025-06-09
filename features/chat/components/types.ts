@@ -62,3 +62,9 @@ export interface KakaoTalkChatProps {
   chatTitle: string;
   className?: string;
 }
+
+export interface TelegramChatProps {
+  messages: Message[];
+  chatTitle: string;
+  className?: string;
+}

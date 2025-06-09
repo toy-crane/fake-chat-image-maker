@@ -1,8 +1,13 @@
 export { KakaoTalkChat } from './KakaoTalkChat';
+export { TelegramChat } from './TelegramChat';
 export { StatusBar } from './StatusBar';
+export { TelegramStatusBar } from './TelegramStatusBar';
 export { ChatHeader } from './ChatHeader';
+export { TelegramHeader } from './TelegramHeader';
 export { ChatMessage } from './ChatMessage';
+export { TelegramMessage } from './TelegramMessage';
 export { ChatInput } from './ChatInput';
+export { TelegramInput } from './TelegramInput';
 export { MessageForm } from './MessageForm';
 export { ProfileForm } from './ProfileForm';
 export * from './types';

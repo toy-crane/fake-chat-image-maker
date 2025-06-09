@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
-import { KakaoTalkChat, MessageForm, ProfileForm } from "@/features/chat/components";
+import { KakaoTalkChat, TelegramChat, MessageForm, ProfileForm } from "@/features/chat/components";
 import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ const structuredData = {
   "@type": "WebApplication",
   name: "Fake Chat Image Maker",
   description:
-    "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
+    "Generate realistic KakaoTalk and Telegram chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
   url: "https://fake-chat-maker.vercel.app",
   applicationCategory: "Entertainment",
   operatingSystem: "Web Browser",
@@ -28,7 +28,8 @@ const structuredData = {
     name: "Fake Chat Image Maker",
   },
   featureList: [
-    "Create realistic KakaoTalk chat screenshots",
+    "Create realistic KakaoTalk and Telegram chat screenshots",
+    "Switch between chat platforms instantly",
     "Custom user profiles and avatars",
     "Bulk message import via JSON",
     "High-quality PNG export",
@@ -47,6 +48,8 @@ const HTML2CANVAS_CONFIG = {
   logging: false,
 };
 
+type ChatType = "kakaotalk" | "telegram";
+
 function ChatInterface() {
   const {
     messages,
@@ -58,6 +61,7 @@ function ChatInterface() {
     clearMessages,
   } = useChatContext();
 
+  const [chatType, setChatType] = useState<ChatType>("kakaotalk");
   const chatRef = useRef<HTMLDivElement>(null);
 
   const downloadChatImage = async () => {
@@ -79,7 +83,7 @@ function ChatInterface() {
       });
 
       const link = document.createElement("a");
-      link.download = `chat-${new Date().toISOString().slice(0, 10)}.png`;
+      link.download = `${chatType}-chat-${new Date().toISOString().slice(0, 10)}.png`;
       link.href = canvas.toDataURL();
       link.click();
     } catch (error) {
@@ -131,6 +135,19 @@ function ChatInterface() {
                   </div>
                 </CardHeader>
                 <CardContent>
+                  {/* Chat Type Selector */}
+                  <div className="mb-6">
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                      Chat Platform
+                    </label>
+                    <Tabs value={chatType} onValueChange={(value) => setChatType(value as ChatType)}>
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="kakaotalk">KakaoTalk</TabsTrigger>
+                        <TabsTrigger value="telegram">Telegram</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+
                   <Tabs defaultValue="profiles">
                     <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value="profiles">Profiles</TabsTrigger>
@@ -172,10 +189,17 @@ function ChatInterface() {
                 className="sticky top-8"
                 ref={chatRef}
               >
-                <KakaoTalkChat
-                  messages={messages}
-                  chatTitle={otherUser?.name || ""}
-                />
+                {chatType === "kakaotalk" ? (
+                  <KakaoTalkChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                ) : (
+                  <TelegramChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                )}
               </div>
             </div>
           </div>

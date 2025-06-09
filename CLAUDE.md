@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fake Chat Image Maker - A web app for creating realistic KakaoTalk chat screenshots. Users can configure profiles, add messages, and export the chat as an image.
+Fake Chat Image Maker - A web app for creating realistic KakaoTalk and Telegram chat screenshots. Users can configure profiles, add messages, switch between chat platforms, and export the chat as an image.
 
 ## Commands
 
@@ -28,17 +28,33 @@ bun lint        # Run ESLint
 
 ### Core Components
 
-- **ChatContext** (`lib/contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
-- **KakaoTalkChat** (`components/kakao/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
-- **MessageForm** (`components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
-- **ProfileForm** (`components/ProfileForm.tsx`): User profile configuration
+- **ChatContext** (`contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
+- **KakaoTalkChat** (`features/chat/components/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface with yellow bubbles and blue background.
+- **TelegramChat** (`features/chat/components/TelegramChat.tsx`): Main chat UI component that renders the Telegram interface with green bubbles, timestamps below messages, and patterned background.
+- **MessageForm** (`features/chat/components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
+- **ProfileForm** (`features/chat/components/ProfileForm.tsx`): User profile configuration
+
+### Chat Platform Components
+
+**KakaoTalk Components:**
+- **ChatHeader**: Header with back button, title, and action icons
+- **ChatMessage**: Message bubbles with sender info and timestamps beside messages
+- **StatusBar**: Simple status bar with time and basic indicators
+- **ChatInput**: Input area with emoji, attachment, and send options
+
+**Telegram Components:**
+- **TelegramHeader**: Header with back button, contact name, and "last seen recently" status
+- **TelegramMessage**: Message bubbles with green (outgoing) and white (incoming) styling, timestamps below messages
+- **TelegramStatusBar**: iOS-style status bar with signal, WiFi, and battery indicators
+- **TelegramInput**: Input area with attachment and voice message icons
 
 ### Data Flow
 
 1. ChatProvider wraps the application
 2. Forms update chat state via context methods
-3. KakaoTalkChat renders real-time preview
-4. Export functionality captures the chat container as PNG
+3. Chat type selector switches between KakaoTalk and Telegram interfaces
+4. Selected chat component (KakaoTalkChat or TelegramChat) renders real-time preview
+5. Export functionality captures the chat container as PNG with platform-specific filename
 
 ### Testing
 
@@ -58,7 +74,9 @@ Project uses Bun test with React Testing Library. Test files use `.test.tsx` ext
 
 ### UI Components
 
-Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elements, check if a Shadcn component exists first. Custom components are in `components/kakao/` for KakaoTalk-specific UI.
+Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elements, check if a Shadcn component exists first. Platform-specific components are in `features/chat/components/` with naming conventions:
+- KakaoTalk components: `ChatHeader`, `ChatMessage`, `StatusBar`, `ChatInput`
+- Telegram components: `TelegramHeader`, `TelegramMessage`, `TelegramStatusBar`, `TelegramInput`
 
 **Images**: Always use Next.js `<Image />` component instead of HTML `<img>` tags for better performance, automatic optimization, and LCP improvements.
 
@@ -66,7 +84,9 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 
 - Tailwind CSS v4 with CSS variables defined in `app/globals.css`
 - Prefer semantic color tokens (e.g., `bg-background`, `text-foreground`) over hardcoded colors
-- KakaoTalk-specific styles are component-scoped
+- Platform-specific styles are component-scoped:
+  - **KakaoTalk**: Blue backgrounds, yellow message bubbles, timestamps beside messages
+  - **Telegram**: Green pattern background, green/white message bubbles, timestamps below messages
 
 ### JSON Import Feature
 
