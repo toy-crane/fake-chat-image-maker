@@ -4,6 +4,9 @@ import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { KakaoTalkChatProps, Message } from "./types";
 
+const DEFAULT_TIME = "4:24";
+const CHAT_CONTAINER_CLASSES = "w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col";
+
 export function KakaoTalkChat({
   messages,
   chatTitle,
@@ -63,9 +66,9 @@ export function KakaoTalkChat({
 
   return (
     <div
-      className={`w-[375px] max-w-sm mx-auto h-[844px] bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col ${className}`}
+      className={`${CHAT_CONTAINER_CLASSES} ${className}`}
     >
-      <StatusBar time="4:24" />
+      <StatusBar time={DEFAULT_TIME} />
       <ChatHeader title={chatTitle} />
 
       <div className="flex-1 bg-blue-100 p-3 overflow-y-auto">

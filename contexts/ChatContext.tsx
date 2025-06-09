@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Message, User } from "@/components/kakao/types";
+import { Message, User } from "@/features/chat/components/types";
 import { MessageFormData, BulkImportData } from "@/lib/schemas/message";
 
 interface ChatContextType {

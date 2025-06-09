@@ -1,9 +1,14 @@
 import { z } from 'zod';
 
+const TIME_REGEX = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+const TIME_ERROR_MESSAGE = "Invalid time format. Use HH:MM";
+const CONTENT_REQUIRED_MESSAGE = 'Message content or image is required';
+const MIN_MESSAGES_ERROR = 'At least one message is required';
+
 export const messageFormSchema = z.object({
   content: z.string().optional(),
   isUserMessage: z.boolean(),
-  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format. Use HH:MM"),
+  time: z.string().regex(TIME_REGEX, TIME_ERROR_MESSAGE),
   type: z.enum(['text', 'image']),
   imageUrl: z.string().optional(),
   imageAlt: z.string().optional(),
@@ -16,14 +21,14 @@ export const messageFormSchema = z.object({
   }
   return false;
 }, {
-  message: 'Message content or image is required',
+  message: CONTENT_REQUIRED_MESSAGE,
   path: ['content'],
 });
 
 export type MessageFormData = z.infer<typeof messageFormSchema>;
 
 export const bulkImportSchema = z.array(messageFormSchema).min(1, {
-  message: 'At least one message is required',
+  message: MIN_MESSAGES_ERROR,
 });
 
 export type BulkImportData = z.infer<typeof bulkImportSchema>;

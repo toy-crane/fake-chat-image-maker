@@ -1,11 +1,14 @@
 "use client";
 
-import { User } from "@/components/kakao/types";
+import { User } from "./types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, X, RotateCcw } from "lucide-react";
+
+const DEFAULT_CURRENT_USER: User = { id: "me", name: "", avatar: "" };
+const DEFAULT_OTHER_USER: User = { id: "other", name: "", avatar: "" };
 
 interface ProfileFormProps {
   currentUser?: User;
@@ -33,10 +36,7 @@ export function ProfileForm({
   };
 
   const resetProfiles = () => {
-    onUpdateUsers(
-      { id: "me", name: "", avatar: "" },
-      { id: "other", name: "", avatar: "" }
-    );
+    onUpdateUsers(DEFAULT_CURRENT_USER, DEFAULT_OTHER_USER);
   };
 
   const handleImageUpload = (
