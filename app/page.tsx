@@ -1,13 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import html2canvas from "html2canvas-pro";
-import { Download } from "lucide-react";
-import { KakaoTalkChat, MessageForm, ProfileForm } from "@/features/chat/components";
+import { Download, Smartphone } from "lucide-react";
+import { KakaoTalkChat, AppleMessageChat, MessageForm, ProfileForm } from "@/features/chat/components";
 import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -58,6 +60,7 @@ function ChatInterface() {
     clearMessages,
   } = useChatContext();
 
+  const [isAppleMode, setIsAppleMode] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   const downloadChatImage = async () => {
@@ -103,6 +106,24 @@ function ChatInterface() {
               Create realistic chat conversations with custom profiles and
               messages
             </p>
+            
+            <div className="flex items-center justify-center gap-4 py-4">
+              <div className="flex items-center space-x-3">
+                <Smartphone className="w-5 h-5 text-yellow-500" />
+                <Label htmlFor="chat-mode" className="text-sm font-medium">
+                  KakaoTalk
+                </Label>
+                <Switch
+                  id="chat-mode"
+                  checked={isAppleMode}
+                  onCheckedChange={setIsAppleMode}
+                />
+                <Label htmlFor="chat-mode" className="text-sm font-medium">
+                  Apple Messages
+                </Label>
+                <Smartphone className="w-5 h-5 text-gray-500" />
+              </div>
+            </div>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 max-w-3xl mx-auto">
               <p className="text-amber-800 text-sm font-medium">
                 ⚠️ For entertainment purposes only. <br />
@@ -172,10 +193,14 @@ function ChatInterface() {
                 className="sticky top-8"
                 ref={chatRef}
               >
-                <KakaoTalkChat
-                  messages={messages}
-                  chatTitle={otherUser?.name || ""}
-                />
+                {isAppleMode ? (
+                  <AppleMessageChat />
+                ) : (
+                  <KakaoTalkChat
+                    messages={messages}
+                    chatTitle={otherUser?.name || ""}
+                  />
+                )}
               </div>
             </div>
           </div>
