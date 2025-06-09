@@ -57,3 +57,8 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 - Tailwind CSS v4 with CSS variables defined in `app/globals.css`
 - Prefer semantic color tokens (e.g., `bg-background`, `text-foreground`) over hardcoded colors
 - KakaoTalk-specific styles are component-scoped
+
+### Forms
+
+- Use `<Input type="time" />` for time inputs (not custom Select components)
+- Always use React Hook Form + Zod for form handling and validation

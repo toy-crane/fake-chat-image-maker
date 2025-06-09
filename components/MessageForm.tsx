@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -353,54 +347,16 @@ export function MessageForm({
 
           {/* Time Picker */}
           <div className="space-y-2">
-            <Label>Timestamp</Label>
-            <div className="flex gap-2 items-center">
-              {/* Hour */}
-              <Select
-                value={timeState.hour.toString().padStart(2, "0")}
-                onValueChange={(value) =>
-                  setTimeState((prev) => ({ ...prev, hour: parseInt(value) }))
-                }
-              >
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                    <SelectItem
-                      key={hour}
-                      value={hour.toString().padStart(2, "0")}
-                    >
-                      {hour.toString().padStart(2, "0")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <span className="text-muted-foreground">:</span>
-
-              {/* Minute */}
-              <Select
-                value={timeState.minute.toString().padStart(2, "0")}
-                onValueChange={(value) =>
-                  setTimeState((prev) => ({ ...prev, minute: parseInt(value) }))
-                }
-              >
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
-                    <SelectItem
-                      key={minute}
-                      value={minute.toString().padStart(2, "0")}
-                    >
-                      {minute.toString().padStart(2, "0")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Label htmlFor="time">Timestamp</Label>
+            <Input
+              id="time"
+              type="time"
+              value={`${timeState.hour.toString().padStart(2, "0")}:${timeState.minute.toString().padStart(2, "0")}`}
+              onChange={(e) => {
+                const [hour, minute] = e.target.value.split(":").map(Number);
+                setTimeState({ hour, minute });
+              }}
+            />
           </div>
 
           {/* Submit Button */}
