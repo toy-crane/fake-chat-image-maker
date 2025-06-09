@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import { ChatMessageProps } from './types';
-import { format } from 'date-fns';
+import Image from "next/image";
+import { ChatMessageProps } from "./types";
+import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function ChatMessage({
@@ -67,7 +67,7 @@ export function ChatMessage({
       <div className="flex justify-end mb-2">
         <div className="flex items-end gap-2">
           {showTimestamp && (
-            <span className="text-xs text-gray-500 mb-1">
+            <span className="text-xs text-gray-500 mb-1 whitespace-nowrap">
               {formatTime(timestamp)}
             </span>
           )}
@@ -99,7 +99,7 @@ export function ChatMessage({
         <div className="flex items-end gap-2">
           {renderContent()}
           {showTimestamp && (
-            <span className="text-xs text-gray-500 mb-1">
+            <span className="text-xs text-gray-500 mb-1 whitespace-nowrap">
               {formatTime(timestamp)}
             </span>
           )}
