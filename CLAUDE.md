@@ -68,15 +68,6 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 - Prefer semantic color tokens (e.g., `bg-background`, `text-foreground`) over hardcoded colors
 - KakaoTalk-specific styles are component-scoped
 
-### Forms
-
-- Use `<Input type="time" />` for time inputs (not custom Select components)
-- Always use React Hook Form + Zod for form handling and validation
-
-### Code Quality
-
-- **Always extract static values outside components** (strings, objects, arrays, configs) to prevent recreation on renders
-
 ### JSON Import Feature
 
 **Bulk Message Import**: Users can import multiple messages at once via JSON file upload.
