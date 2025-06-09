@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { Metadata } from "next";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
 import { KakaoTalkChat } from "../components/kakao";
@@ -10,6 +11,33 @@ import { ChatProvider, useChatContext } from "@/lib/contexts/ChatContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Fake Chat Image Maker",
+  "description": "Generate realistic KakaoTalk chat screenshots with custom profiles and messages. Perfect for entertainment, presentations, and design mockups.",
+  "url": "https://fake-chat-maker.vercel.app",
+  "applicationCategory": "Entertainment",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "Fake Chat Image Maker"
+  },
+  "featureList": [
+    "Create realistic KakaoTalk chat screenshots",
+    "Custom user profiles and avatars",
+    "Bulk message import via JSON",
+    "High-quality PNG export",
+    "Real-time chat preview",
+    "Responsive design"
+  ]
+};
 
 function ChatInterface() {
   const {
@@ -58,8 +86,13 @@ function ChatInterface() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="min-h-screen bg-background p-4 md:p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
         <div className="text-center space-y-3 mb-12">
           <h1 className="text-6xl font-bold tracking-tight">
             Fake Chat Message Generator
@@ -145,7 +178,8 @@ function ChatInterface() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
