@@ -28,10 +28,12 @@ interface ChatProviderProps {
 export function ChatProvider({
   children,
   initialMessages = [],
+  currentUser: initialCurrentUser,
+  otherUser: initialOtherUser,
 }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [currentUser, setCurrentUser] = useState<User | undefined>();
-  const [otherUser, setOtherUser] = useState<User | undefined>();
+  const [currentUser, setCurrentUser] = useState<User | undefined>(initialCurrentUser);
+  const [otherUser, setOtherUser] = useState<User | undefined>(initialOtherUser);
 
   const addMessage = (data: MessageFormData) => {
     // Create Date from time string

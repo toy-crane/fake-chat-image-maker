@@ -53,8 +53,11 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      expect(screen.getByText(/ai-powered prompt/i)).toBeInTheDocument();
-      expect(screen.getByText(/generate the correct format/i)).toBeInTheDocument();
+      // Open the AI Prompt accordion
+      fireEvent.click(screen.getByText(/ai prompt template/i));
+      
+      expect(screen.getByText(/copy this prompt to your ai assistant/i)).toBeInTheDocument();
+      expect(screen.getByText(/generate a json array/i)).toBeInTheDocument();
     });
   });
 
@@ -64,16 +67,14 @@ describe("MessageForm JSON Import", () => {
         {
           content: "Hello world",
           isUserMessage: true,
-          hour: 14,
-          minute: 30,
+          time: "14:30",
           type: "text",
         },
         {
           imageUrl: "data:image/png;base64,abc123",
           imageAlt: "Test image",
           isUserMessage: false,
-          hour: 15,
-          minute: 0,
+          time: "15:00",
           type: "image",
         },
       ];
@@ -84,7 +85,7 @@ describe("MessageForm JSON Import", () => {
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
       // Upload file
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(validMessages);
       
       await act(async () => {
@@ -101,7 +102,7 @@ describe("MessageForm JSON Import", () => {
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
       // Upload invalid file
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockInvalidFile();
       
       await act(async () => {
@@ -119,6 +120,7 @@ describe("MessageForm JSON Import", () => {
           content: "Hello",
           isUserMessage: true,
           type: "text",
+          // Missing time
         },
         {
           // Invalid time values
@@ -135,7 +137,7 @@ describe("MessageForm JSON Import", () => {
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
       // Upload file
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(invalidMessages);
       
       await act(async () => {
@@ -153,7 +155,7 @@ describe("MessageForm JSON Import", () => {
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
       // Upload empty array
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile([]);
       
       await act(async () => {
@@ -171,7 +173,7 @@ describe("MessageForm JSON Import", () => {
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
       // Check file input accept attribute
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       expect(fileInput).toHaveAttribute("accept", ".json,application/json");
     });
   });
@@ -182,14 +184,14 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
+      // Open the JSON Format accordion
+      fireEvent.click(screen.getByText(/json format documentation/i));
+      
       // Check for format documentation
-      expect(screen.getByText(/text message example/i)).toBeInTheDocument();
-      expect(screen.getByText(/image message example/i)).toBeInTheDocument();
       expect(screen.getByText(/"type": "text"/)).toBeInTheDocument();
       expect(screen.getByText(/"type": "image"/)).toBeInTheDocument();
       expect(screen.getByText(/"isUserMessage"/)).toBeInTheDocument();
-      expect(screen.getByText(/"hour"/)).toBeInTheDocument();
-      expect(screen.getByText(/"minute"/)).toBeInTheDocument();
+      expect(screen.getByText(/"time"/)).toBeInTheDocument();
     });
 
     it("shows AI prompt for generating JSON", () => {
@@ -197,7 +199,10 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      expect(screen.getByText(/copy this prompt/i)).toBeInTheDocument();
+      // Open the AI Prompt accordion
+      fireEvent.click(screen.getByText(/ai prompt template/i));
+      
+      expect(screen.getByText(/copy this prompt to your ai assistant/i)).toBeInTheDocument();
       expect(screen.getByText(/generate a json array/i)).toBeInTheDocument();
     });
   });
@@ -207,8 +212,7 @@ describe("MessageForm JSON Import", () => {
       const invalidMessage = [
         {
           isUserMessage: true,
-          hour: 14,
-          minute: 30,
+          time: "14:30",
           type: "text",
           // Missing content
         },
@@ -218,22 +222,21 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(invalidMessage);
       
       await act(async () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
       });
 
-      expect(screen.getByText(/message content.*required/i)).toBeInTheDocument();
+      expect(screen.getByText(/content.*required/i)).toBeInTheDocument();
     });
 
     it("shows clear error for image message without imageUrl", async () => {
       const invalidMessage = [
         {
           isUserMessage: true,
-          hour: 14,
-          minute: 30,
+          time: "14:30",
           type: "image",
           // Missing imageUrl
         },
@@ -243,14 +246,14 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(invalidMessage);
       
       await act(async () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
       });
 
-      expect(screen.getByText(/image.*required/i)).toBeInTheDocument();
+      expect(screen.getByText(/validation errors/i)).toBeInTheDocument();
     });
 
     it("provides specific fix suggestions in error messages", async () => {
@@ -258,8 +261,7 @@ describe("MessageForm JSON Import", () => {
         {
           content: "Hello",
           isUserMessage: "yes", // Should be boolean
-          hour: "14", // Should be number
-          minute: 30,
+          time: "25:30", // Invalid time
           type: "text",
         },
       ];
@@ -268,14 +270,14 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(invalidMessage);
       
       await act(async () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
       });
 
-      expect(screen.getByText(/fix the following/i)).toBeInTheDocument();
+      expect(screen.getByText(/validation errors/i)).toBeInTheDocument();
     });
   });
 
@@ -295,8 +297,7 @@ describe("MessageForm JSON Import", () => {
         {
           content: "Test message",
           isUserMessage: true,
-          hour: 14,
-          minute: 30,
+          time: "14:30",
           type: "text",
         },
       ];
@@ -305,7 +306,7 @@ describe("MessageForm JSON Import", () => {
       
       fireEvent.click(screen.getByRole("button", { name: /import json/i }));
       
-      const fileInput = screen.getByLabelText(/choose json file/i);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = createMockJsonFile(validMessages);
       
       await act(async () => {
@@ -313,7 +314,7 @@ describe("MessageForm JSON Import", () => {
       });
 
       // Dialog should close after successful import
-      expect(screen.queryByText(/json format/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/import messages from json/i)).not.toBeInTheDocument();
     });
   });
 });

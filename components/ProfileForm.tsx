@@ -126,7 +126,7 @@ export function ProfileForm({
 
           {/* Other User */}
           <div className="space-y-4">
-            <h3 className="font-medium">Chat Partner</h3>
+            <h3 className="font-medium">Other User</h3>
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Avatar
