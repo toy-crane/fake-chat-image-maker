@@ -26,6 +26,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Send,
   User,
   Users,
@@ -277,40 +283,7 @@ export function MessageForm({
                   </DialogHeader>
 
                   <div className="space-y-4 overflow-y-auto flex-1">
-                    {/* JSON Format Documentation */}
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Required JSON Format</h4>
-                      <div className="bg-muted p-4 rounded-lg">
-                        <p className="text-sm text-muted-foreground mb-2">
-                          Array of message objects with the following structure:
-                        </p>
-                        <pre className="text-xs overflow-x-auto">
-                          {JSON_FORMAT_EXAMPLE}
-                        </pre>
-                      </div>
-                    </div>
-
-                    {/* AI Prompt */}
-                    <div className="space-y-3">
-                      <h4 className="font-medium">AI-Powered Generation</h4>
-                      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                        <p className="text-sm text-blue-700 mb-2">
-                          <FileText className="w-4 h-4 inline mr-1" />
-                          Copy this prompt to your AI assistant:
-                        </p>
-                        <div className="bg-white p-3 rounded border text-xs font-mono">
-                          Generate a JSON array of realistic chat messages using
-                          this format. Include a mix of text and image messages
-                          with natural conversation flow. Use
-                          &quot;isUserMessage&quot;: true/false to alternate
-                          between speakers. Set realistic time timestamps in
-                          HH:MM format. For image messages, use placeholder data
-                          URLs or descriptions.
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* File Upload */}
+                    {/* File Upload - Moved to top */}
                     <div className="space-y-3">
                       <h4 className="font-medium">Upload JSON File</h4>
                       <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
@@ -349,6 +322,44 @@ export function MessageForm({
                         </div>
                       </Alert>
                     )}
+
+                    {/* Accordion for JSON Format and AI Prompt */}
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="json-format">
+                        <AccordionTrigger>JSON Format Documentation</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="bg-muted p-4 rounded-lg">
+                            <p className="text-sm text-muted-foreground mb-2">
+                              Array of message objects with the following structure:
+                            </p>
+                            <pre className="text-xs overflow-x-auto">
+                              {JSON_FORMAT_EXAMPLE}
+                            </pre>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="ai-prompt">
+                        <AccordionTrigger>AI Prompt Template</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                            <p className="text-sm text-blue-700 mb-2">
+                              <FileText className="w-4 h-4 inline mr-1" />
+                              Copy this prompt to your AI assistant:
+                            </p>
+                            <div className="bg-white p-3 rounded border text-xs font-mono">
+                              Generate a JSON array of realistic chat messages using
+                              this format. Include a mix of text and image messages
+                              with natural conversation flow. Use
+                              &quot;isUserMessage&quot;: true/false to alternate
+                              between speakers. Set realistic time timestamps in
+                              HH:MM format. For image messages, use placeholder data
+                              URLs or descriptions.
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 </DialogContent>
               </Dialog>

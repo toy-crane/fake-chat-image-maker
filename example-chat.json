@@ -1,0 +1,63 @@
+[
+  {
+    "type": "text",
+    "content": "Hey! How was your day?",
+    "isUserMessage": false,
+    "time": "14:30"
+  },
+  {
+    "type": "text", 
+    "content": "Pretty good! Just finished work. How about you?",
+    "isUserMessage": true,
+    "time": "14:32"
+  },
+  {
+    "type": "text",
+    "content": "Same here! Want to grab dinner tonight?",
+    "isUserMessage": false,
+    "time": "14:33"
+  },
+  {
+    "type": "text",
+    "content": "Sounds great! Where should we go?",
+    "isUserMessage": true,
+    "time": "14:35"
+  },
+  {
+    "type": "text",
+    "content": "How about that new Korean BBQ place?",
+    "isUserMessage": false,
+    "time": "14:36"
+  },
+  {
+    "type": "image",
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+    "imageAlt": "Korean BBQ restaurant photo",
+    "isUserMessage": false,
+    "time": "14:37"
+  },
+  {
+    "type": "text",
+    "content": "Perfect! What time?",
+    "isUserMessage": true,
+    "time": "14:38"
+  },
+  {
+    "type": "text",
+    "content": "How about 7 PM?",
+    "isUserMessage": false,
+    "time": "14:39"
+  },
+  {
+    "type": "text",
+    "content": "See you there! 👍",
+    "isUserMessage": true,
+    "time": "14:40"
+  },
+  {
+    "type": "text",
+    "content": "Can't wait! It's going to be delicious 🍖",
+    "isUserMessage": false,
+    "time": "14:41"
+  }
+]
