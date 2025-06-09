@@ -6,8 +6,7 @@ describe("messageFormSchema", () => {
     const validTextMessage = {
       content: "Hello world",
       isUserMessage: true,
-      hour: 14,
-      minute: 30,
+      time: "14:30",
       type: "text" as const,
     };
 
@@ -20,8 +19,7 @@ describe("messageFormSchema", () => {
       imageUrl: "data:image/png;base64,abc123",
       imageAlt: "Test image",
       isUserMessage: false,
-      hour: 9,
-      minute: 15,
+      time: "09:15",
       type: "image" as const,
     };
 
@@ -32,8 +30,7 @@ describe("messageFormSchema", () => {
   it("rejects text message without content", () => {
     const invalidMessage = {
       isUserMessage: true,
-      hour: 14,
-      minute: 30,
+      time: "14:30",
       type: "text" as const,
     };
 
@@ -43,8 +40,7 @@ describe("messageFormSchema", () => {
   it("rejects image message without imageUrl", () => {
     const invalidMessage = {
       isUserMessage: true,
-      hour: 14,
-      minute: 30,
+      time: "14:30",
       type: "image" as const,
     };
 
@@ -58,16 +54,14 @@ describe("bulkImportSchema", () => {
       {
         content: "First message",
         isUserMessage: true,
-        hour: 14,
-        minute: 30,
+        time: "14:30",
         type: "text" as const,
       },
       {
         imageUrl: "data:image/png;base64,abc123",
         imageAlt: "Test image",
         isUserMessage: false,
-        hour: 9,
-        minute: 15,
+        time: "09:15",
         type: "image" as const,
       },
     ];
@@ -87,15 +81,13 @@ describe("bulkImportSchema", () => {
       {
         content: "Valid message",
         isUserMessage: true,
-        hour: 14,
-        minute: 30,
+        time: "14:30",
         type: "text" as const,
       },
       {
         // Invalid: no content or imageUrl
         isUserMessage: false,
-        hour: 9,
-        minute: 15,
+        time: "09:15",
         type: "text" as const,
       },
     ];
@@ -108,23 +100,20 @@ describe("bulkImportSchema", () => {
       {
         content: "Text message 1",
         isUserMessage: true,
-        hour: 10,
-        minute: 0,
+        time: "10:00",
         type: "text" as const,
       },
       {
         imageUrl: "data:image/jpeg;base64,def456",
         imageAlt: "Photo",
         isUserMessage: false,
-        hour: 10,
-        minute: 5,
+        time: "10:05",
         type: "image" as const,
       },
       {
         content: "Text message 2",
         isUserMessage: true,
-        hour: 10,
-        minute: 10,
+        time: "10:10",
         type: "text" as const,
       },
     ];

@@ -117,14 +117,14 @@ describe("MessageForm JSON Import", () => {
         {
           // Missing required fields
           content: "Hello",
+          isUserMessage: true,
           type: "text",
         },
         {
           // Invalid time values
           content: "World",
           isUserMessage: true,
-          hour: 25, // Invalid hour
-          minute: 30,
+          time: "25:30", // Invalid time
           type: "text",
         },
       ];

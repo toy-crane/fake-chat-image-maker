@@ -58,15 +58,12 @@ export function MessageForm({
 
   const getCurrentTime = () => {
     const now = new Date();
-    const hour = now.getHours();
-    const minute = now.getMinutes();
-    return {
-      hour,
-      minute,
-    };
+    const hour = now.getHours().toString().padStart(2, "0");
+    const minute = now.getMinutes().toString().padStart(2, "0");
+    return `${hour}:${minute}`;
   };
 
-  const [timeState, setTimeState] = useState(() => getCurrentTime());
+  const [timeValue, setTimeValue] = useState(() => getCurrentTime());
 
   const {
     register,
@@ -80,8 +77,7 @@ export function MessageForm({
     defaultValues: {
       content: "",
       isUserMessage: true,
-      hour: timeState.hour,
-      minute: timeState.minute,
+      time: timeValue,
       type: "text",
       imageUrl: "",
       imageAlt: "",
@@ -97,9 +93,8 @@ export function MessageForm({
   }, [messageType, setValue]);
 
   useEffect(() => {
-    setValue("hour", timeState.hour);
-    setValue("minute", timeState.minute);
-  }, [timeState, setValue]);
+    setValue("time", timeValue);
+  }, [timeValue, setValue]);
 
   useEffect(() => {
     // Auto-focus on mount
@@ -163,8 +158,7 @@ export function MessageForm({
   const onSubmit = (data: MessageFormData) => {
     const formData = {
       ...data,
-      hour: timeState.hour,
-      minute: timeState.minute,
+      time: timeValue,
       type: messageType,
     };
 
@@ -172,15 +166,14 @@ export function MessageForm({
     reset({
       content: "",
       isUserMessage,
-      hour: timeState.hour,
-      minute: timeState.minute,
+      time: timeValue,
       type: "text",
       imageUrl: "",
       imageAlt: "",
     });
     setMessageType("text");
     setSelectedImage(null);
-    setTimeState(getCurrentTime());
+    setTimeValue(getCurrentTime());
     if (messageType === "text") {
       setFocus("content");
     }
@@ -266,16 +259,14 @@ export function MessageForm({
     "type": "text",
     "content": "Hello world!",
     "isUserMessage": true,
-    "hour": 14,
-    "minute": 30
+    "time": "14:30"
   },
   {
     "type": "image", 
     "imageUrl": "data:image/png;base64,abc123...",
     "imageAlt": "Photo description",
     "isUserMessage": false,
-    "hour": 14,
-    "minute": 35
+    "time": "14:35"
   }
 ]`}
                         </pre>
@@ -291,7 +282,7 @@ export function MessageForm({
                           Copy this prompt to your AI assistant:
                         </p>
                         <div className="bg-white p-3 rounded border text-xs font-mono">
-                          Generate a JSON array of realistic chat messages using this format. Include a mix of text and image messages with natural conversation flow. Use &quot;isUserMessage&quot;: true/false to alternate between speakers. Set realistic hour/minute timestamps. For image messages, use placeholder data URLs or descriptions.
+                          Generate a JSON array of realistic chat messages using this format. Include a mix of text and image messages with natural conversation flow. Use &quot;isUserMessage&quot;: true/false to alternate between speakers. Set realistic time timestamps in HH:MM format. For image messages, use placeholder data URLs or descriptions.
                         </div>
                       </div>
                     </div>
@@ -504,11 +495,8 @@ export function MessageForm({
             <Input
               id="time"
               type="time"
-              value={`${timeState.hour.toString().padStart(2, "0")}:${timeState.minute.toString().padStart(2, "0")}`}
-              onChange={(e) => {
-                const [hour, minute] = e.target.value.split(":").map(Number);
-                setTimeState({ hour, minute });
-              }}
+              value={timeValue}
+              onChange={(e) => setTimeValue(e.target.value)}
             />
           </div>
 

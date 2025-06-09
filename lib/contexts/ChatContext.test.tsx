@@ -62,8 +62,7 @@ function TestComponent() {
             type: "text",
             content: "New message",
             isUserMessage: true,
-            hour: 12,
-            minute: 30,
+            time: "12:30",
           })
         }
       >
@@ -77,8 +76,7 @@ function TestComponent() {
             imageUrl: "new-image.jpg",
             imageAlt: "New image",
             isUserMessage: false,
-            hour: 13,
-            minute: 45,
+            time: "13:45",
           })
         }
       >
@@ -89,8 +87,7 @@ function TestComponent() {
         onClick={() =>
           editMessage("1", {
             content: "Updated message",
-            hour: 14,
-            minute: 15,
+            time: "14:15",
           })
         }
       >
@@ -224,8 +221,7 @@ describe("ChatContext", () => {
                 type: "text",
                 content: "Test",
                 isUserMessage: true,
-                hour: 10,
-                minute: 0,
+                time: "10:00",
               })
             }
           >
@@ -265,8 +261,7 @@ describe("ChatContext", () => {
                 type: "text",
                 content: "Test",
                 isUserMessage: true,
-                hour: 15,
-                minute: 30,
+                time: "15:30",
               })
             }
           >
@@ -325,8 +320,7 @@ describe("ChatContext", () => {
           <button
             onClick={() =>
               editMessage("1", {
-                hour: 16,
-                minute: 45,
+                time: "16:45",
               })
             }
           >
@@ -479,23 +473,20 @@ describe("ChatContext", () => {
             type: "text" as const,
             content: "First message",
             isUserMessage: true,
-            hour: 10,
-            minute: 0,
+            time: "10:00"
           },
           {
             type: "image" as const,
             imageUrl: "test-image.jpg",
             imageAlt: "Test image",
             isUserMessage: false,
-            hour: 10,
-            minute: 5,
+            time: "10:05"
           },
           {
             type: "text" as const,
             content: "Third message",
             isUserMessage: true,
-            hour: 10,
-            minute: 10,
+            time: "10:10"
           },
         ];
 
@@ -537,22 +528,19 @@ describe("ChatContext", () => {
             type: "text" as const,
             content: "Message A",
             isUserMessage: true,
-            hour: 10,
-            minute: 0,
+            time: "10:00"
           },
           {
             type: "text" as const,
             content: "Message B",
             isUserMessage: false,
-            hour: 10,
-            minute: 5,
+            time: "10:05"
           },
           {
             type: "text" as const,
             content: "Message C",
             isUserMessage: true,
-            hour: 10,
-            minute: 10,
+            time: "10:10"
           },
         ];
 
@@ -596,15 +584,13 @@ describe("ChatContext", () => {
             type: "text" as const,
             content: "User message",
             isUserMessage: true,
-            hour: 14,
-            minute: 30,
+            time: "14:30",
           },
           {
             type: "text" as const,
             content: "Other message",
             isUserMessage: false,
-            hour: 15,
-            minute: 45,
+            time: "15:45",
           },
         ];
 
@@ -683,15 +669,13 @@ describe("ChatContext", () => {
             type: "text" as const,
             content: "Bulk message 1",
             isUserMessage: true,
-            hour: 11,
-            minute: 0,
+            time: "11:00",
           },
           {
             type: "text" as const,
             content: "Bulk message 2",
             isUserMessage: false,
-            hour: 11,
-            minute: 5,
+            time: "11:05",
           },
         ];
 
@@ -704,8 +688,7 @@ describe("ChatContext", () => {
                   type: "text",
                   content: "Single message",
                   isUserMessage: true,
-                  hour: 10,
-                  minute: 0,
+                  time: "10:00"
                 })
               }
             >
@@ -787,8 +770,7 @@ describe("ChatContext", () => {
                   type: "text",
                   content: "Test message",
                   isUserMessage: true,
-                  hour: 10,
-                  minute: 0,
+                  time: "10:00"
                 })
               }
             >
@@ -851,8 +833,7 @@ describe("ChatContext", () => {
                   type: "text",
                   content: "User message",
                   isUserMessage: true,
-                  hour: 10,
-                  minute: 0,
+                  time: "10:00"
                 })
               }
             >
@@ -865,8 +846,7 @@ describe("ChatContext", () => {
                   type: "text",
                   content: "Other message",
                   isUserMessage: false,
-                  hour: 10,
-                  minute: 5,
+                  time: "10:05"
                 })
               }
             >

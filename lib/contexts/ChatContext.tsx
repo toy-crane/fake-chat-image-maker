@@ -34,9 +34,10 @@ export function ChatProvider({
   const [otherUser, setOtherUser] = useState<User | undefined>();
 
   const addMessage = (data: MessageFormData) => {
-    // Create Date from hour and minute
+    // Create Date from time string
+    const [hour, minute] = data.time.split(':').map(Number);
     const timestampDate = new Date();
-    timestampDate.setHours(data.hour, data.minute, 0, 0);
+    timestampDate.setHours(hour, minute, 0, 0);
 
     if (!currentUser || !otherUser) {
       console.error("Current user or other user is not set");
@@ -78,9 +79,10 @@ export function ChatProvider({
     }
 
     const newMessages: Message[] = bulkData.map((data, index) => {
-      // Create Date from hour and minute
+      // Create Date from time string
+      const [hour, minute] = data.time.split(':').map(Number);
       const timestampDate = new Date();
-      timestampDate.setHours(data.hour, data.minute, 0, 0);
+      timestampDate.setHours(hour, minute, 0, 0);
 
       const baseMessage = {
         id: (Date.now() + index).toString(), // Ensure unique IDs
@@ -111,12 +113,12 @@ export function ChatProvider({
       prev.map((message) => {
         if (message.id !== id) return message;
 
-        // Create updated timestamp if hour/minute are provided
+        // Create updated timestamp if time is provided
         let timestamp = message.timestamp;
-        if (data.hour !== undefined || data.minute !== undefined) {
+        if (data.time !== undefined) {
+          const [hour, minute] = data.time.split(':').map(Number);
           timestamp = new Date(message.timestamp);
-          if (data.hour !== undefined) timestamp.setHours(data.hour);
-          if (data.minute !== undefined) timestamp.setMinutes(data.minute);
+          timestamp.setHours(hour, minute, 0, 0);
         }
 
         // Update sender if isUserMessage changed

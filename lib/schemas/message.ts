@@ -3,8 +3,7 @@ import { z } from 'zod';
 export const messageFormSchema = z.object({
   content: z.string().optional(),
   isUserMessage: z.boolean(),
-  hour: z.number().min(0).max(23),
-  minute: z.number().min(0).max(59),
+  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format. Use HH:MM"),
   type: z.enum(['text', 'image']),
   imageUrl: z.string().optional(),
   imageAlt: z.string().optional(),
