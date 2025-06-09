@@ -62,3 +62,32 @@ export interface KakaoTalkChatProps {
   chatTitle: string;
   className?: string;
 }
+
+export type ChatMode = "kakaotalk" | "instagram";
+
+export interface InstagramDMChatProps {
+  messages: Message[];
+  chatTitle: string;
+  className?: string;
+}
+
+export interface InstagramHeaderProps {
+  title: string;
+}
+
+export interface InstagramMessageProps {
+  message: Message;
+  showSenderInfo?: boolean;
+  showTimestamp?: boolean;
+}
+
+export interface InstagramStatusBarProps {
+  time: string;
+}
+
+export interface InstagramInputProps {
+  onSendMessage?: (message: string) => void;
+  onAttach?: () => void;
+  onCamera?: () => void;
+  placeholder?: string;
+}

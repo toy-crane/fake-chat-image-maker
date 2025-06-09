@@ -29,7 +29,7 @@ const mockInitialMessages: Message[] = [
   {
     id: "2",
     type: "image",
-    imageUrl: "test-image.jpg",
+    imageUrl: "/test-image.jpg",
     alt: "Test image",
     sender: mockOtherUser,
     timestamp: new Date("2024-01-01T10:05:00Z"),
@@ -477,7 +477,7 @@ describe("ChatContext", () => {
           },
           {
             type: "image" as const,
-            imageUrl: "test-image.jpg",
+            imageUrl: "/test-image.jpg",
             imageAlt: "Test image",
             isUserMessage: false,
             time: "10:05"

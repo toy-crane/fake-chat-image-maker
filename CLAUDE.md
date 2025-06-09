@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fake Chat Image Maker - A web app for creating realistic KakaoTalk chat screenshots. Users can configure profiles, add messages, and export the chat as an image.
+Fake Chat Image Maker - A web app for creating realistic chat screenshots. Users can configure profiles, add messages, and export the chat as an image. Supports multiple chat platforms including KakaoTalk and Instagram DM.
 
 ## Commands
 
@@ -28,10 +28,11 @@ bun lint        # Run ESLint
 
 ### Core Components
 
-- **ChatContext** (`lib/contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
-- **KakaoTalkChat** (`components/kakao/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
-- **MessageForm** (`components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
-- **ProfileForm** (`components/ProfileForm.tsx`): User profile configuration
+- **ChatContext** (`contexts/ChatContext.tsx`): Central state management for chat data (users, messages). All chat operations go through this context.
+- **KakaoTalkChat** (`features/chat/components/KakaoTalkChat.tsx`): Main chat UI component that renders the KakaoTalk interface. Uses html2canvas-pro for image export.
+- **InstagramDMChat** (`features/chat/components/instagram/InstagramDMChat.tsx`): Main chat UI component that renders the Instagram DM interface with purple message bubbles and Instagram-specific styling.
+- **MessageForm** (`features/chat/components/MessageForm.tsx`): Form for adding new messages with React Hook Form + Zod validation
+- **ProfileForm** (`features/chat/components/ProfileForm.tsx`): User profile configuration
 
 ### Data Flow
 
@@ -81,3 +82,23 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
   - `addBulkMessages()` method in `ChatContext` for bulk insertion
   - Shadcn Dialog component for user interface
   - File upload with `.json` restriction and drag-drop styling
+
+### Instagram DM Feature
+
+**Instagram-style Chat Interface**: Complete Instagram Direct Message UI implementation with platform-specific design.
+
+- **Location**: `features/chat/components/instagram/` directory
+- **Components**:
+  - `InstagramDMChat.tsx` - Main container with 375x844px mobile viewport
+  - `InstagramStatusBar.tsx` - Status bar with time, signal, wifi, and battery indicators
+  - `InstagramChatHeader.tsx` - Header with user profile, back button, phone/video call actions
+  - `InstagramChatMessage.tsx` - Message bubbles with Instagram's purple color scheme
+  - `InstagramChatInput.tsx` - Input area with camera, microphone, gallery, sticker, and more buttons
+- **Design Features**:
+  - Purple (#8B3DFF) message bubbles for user messages
+  - Light gray bubbles for other user messages
+  - Profile pictures shown on every message (Instagram style)
+  - Rounded message bubbles (18px border radius)
+  - Instagram-specific icons and layout
+- **Reuses**: ChatContext for state management, MessageForm for message creation, export functionality
+- **Testing**: Comprehensive test suite with 32 tests covering all components and interactions
