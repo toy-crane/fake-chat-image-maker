@@ -91,7 +91,7 @@ function ChatInterface() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="min-h-screen bg-background p-4 md:p-8 mt-16">
+      <div className="min-h-screen bg-background p-4 md:p-8 mt-16 pb-16">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="text-center space-y-3 mb-16">
             <h1 className="text-6xl font-bold tracking-tight">
@@ -110,7 +110,7 @@ function ChatInterface() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-16 md:gap-8">
             {/* Configuration Panel */}
             <div className="xl:col-span-3">
               <Card>
