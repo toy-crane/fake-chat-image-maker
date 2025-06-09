@@ -1,5 +1,5 @@
-import { describe, expect, it, beforeEach } from "bun:test";
-import { render, screen, fireEvent } from "@/testing-library";
+import { describe, expect, it, jest, beforeEach } from "bun:test";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { InstagramDMChat } from "./InstagramDMChat";
 import { ChatProvider } from "@/contexts/ChatContext";
 

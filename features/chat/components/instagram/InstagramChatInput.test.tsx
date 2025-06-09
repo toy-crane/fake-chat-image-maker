@@ -1,5 +1,5 @@
-import { describe, expect, it } from "bun:test";
-import { render, screen, fireEvent } from "@/testing-library";
+import { describe, expect, it, jest, beforeEach } from "bun:test";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { InstagramChatInput } from "./InstagramChatInput";
 
 describe("InstagramChatInput", () => {

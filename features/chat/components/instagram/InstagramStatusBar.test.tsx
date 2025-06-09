@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { render, screen } from "@/testing-library";
+import { render, screen } from "@testing-library/react";
 import { InstagramStatusBar } from "./InstagramStatusBar";
 
 describe("InstagramStatusBar", () => {

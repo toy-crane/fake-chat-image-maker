@@ -1,12 +1,12 @@
-import { describe, expect, it } from "bun:test";
-import { render, screen, fireEvent } from "@/testing-library";
+import { describe, expect, it, jest, beforeEach } from "bun:test";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { InstagramChatHeader } from "./InstagramChatHeader";
 
 describe("InstagramChatHeader", () => {
   const mockUser = {
     id: "user1",
     name: "이동범",
-    avatar: "https://example.com/avatar.jpg",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNkZGQiLz4=",
     username: "dongbumss",
   };
 
@@ -46,7 +46,7 @@ describe("InstagramChatHeader", () => {
 
     const avatar = screen.getByAltText("이동범");
     expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveAttribute("src", expect.stringContaining("example.com/avatar.jpg"));
+    expect(avatar).toHaveAttribute("src", expect.stringContaining("data:image/svg+xml;base64"));
   });
 
   it("renders back button", () => {

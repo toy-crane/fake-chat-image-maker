@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { render, screen } from "@/testing-library";
+import { render, screen } from "@testing-library/react";
 import { InstagramChatMessage } from "./InstagramChatMessage";
 import type { Message } from "@/features/chat/components/types";
 
@@ -25,7 +25,7 @@ describe("InstagramChatMessage", () => {
   const mockImageMessage: Message = {
     id: "3",
     type: "image",
-    imageUrl: "https://example.com/image.jpg",
+    imageUrl: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iIzAwZiIvPg==",
     alt: "Test image",
     sender: "user1",
     timestamp: new Date("2024-01-01T10:02:00"),
@@ -35,7 +35,7 @@ describe("InstagramChatMessage", () => {
   const mockUser = {
     id: "user1",
     name: "이동범",
-    avatar: "https://example.com/avatar.jpg",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNkZGQiLz4=",
   };
 
   it("renders text message from other user", () => {
@@ -87,7 +87,7 @@ describe("InstagramChatMessage", () => {
 
     const image = screen.getByAltText("Test image");
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", expect.stringContaining("example.com/image.jpg"));
+    expect(image).toHaveAttribute("src", expect.stringContaining("data:image/svg+xml;base64"));
   });
 
   it("shows avatar for every message (Instagram style)", () => {
@@ -104,7 +104,7 @@ describe("InstagramChatMessage", () => {
 
     const avatar = screen.getByTestId("message-avatar");
     expect(avatar).toBeInTheDocument();
-    expect(avatar).toHaveAttribute("src", expect.stringContaining("example.com/avatar.jpg"));
+    expect(avatar).toHaveAttribute("src", expect.stringContaining("data:image/svg+xml;base64"));
   });
 
   it("does not show avatar for user's own messages", () => {
