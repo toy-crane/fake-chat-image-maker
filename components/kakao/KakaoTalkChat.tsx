@@ -1,7 +1,6 @@
 import { StatusBar } from "./StatusBar";
 import { ChatHeader } from "./ChatHeader";
-import { MessageBubble } from "./MessageBubble";
-import { ImageMessage } from "./ImageMessage";
+import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { KakaoTalkChatProps, Message } from "./types";
 
@@ -44,24 +43,14 @@ export function KakaoTalkChat({
       }
     }
 
-    if (message.type === "text") {
-      return (
-        <MessageBubble
-          key={message.id}
-          message={message}
-          showSenderInfo={showSenderInfo}
-          showTimestamp={showTimestamp}
-        />
-      );
-    } else if (message.type === "image") {
-      return (
-        <ImageMessage
-          key={message.id}
-          message={message}
-        />
-      );
-    }
-    return null;
+    return (
+      <ChatMessage
+        key={message.id}
+        message={message}
+        showSenderInfo={showSenderInfo}
+        showTimestamp={showTimestamp}
+      />
+    );
   };
 
   return (

@@ -43,6 +43,12 @@ export interface ImageMessageProps {
   message: ImageMessage;
 }
 
+export interface ChatMessageProps {
+  message: Message;
+  showSenderInfo?: boolean;
+  showTimestamp?: boolean;
+}
+
 export interface ChatInputProps {
   onSendMessage?: (message: string) => void;
   onAttach?: () => void;
