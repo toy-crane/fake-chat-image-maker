@@ -70,6 +70,10 @@ Uses Shadcn/ui components (found in `components/ui/`). When adding new UI elemen
 - Use `<Input type="time" />` for time inputs (not custom Select components)
 - Always use React Hook Form + Zod for form handling and validation
 
+### Code Quality
+
+- Extract magic numbers/strings to constants outside components to prevent recreation on renders
+
 ### JSON Import Feature
 
 **Bulk Message Import**: Users can import multiple messages at once via JSON file upload.
